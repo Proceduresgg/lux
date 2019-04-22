@@ -21,14 +21,14 @@ public class Lux extends JavaPlugin {
         new PhoenixGui(this); // Initializing the Menu API
 
         Arrays.asList(new LobbyListeners(), new ProfileListeners())
-                .forEach(Lux::registerListener);
+                .forEach(this::registerListener);
     }
 
     public void onDisable() {
         Profile.save();
     }
 
-    private static void registerListener(Listener listener) {
-        Bukkit.getPluginManager().registerEvents(listener, instance);
+    private void registerListener(Listener listener) {
+        Bukkit.getPluginManager().registerEvents(listener, this);
     }
 }
