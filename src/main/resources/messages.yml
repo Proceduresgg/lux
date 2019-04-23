@@ -1,0 +1,6 @@
+JOIN-MESSAGES:
+  - "This server is currently running Lux Practice."
+
+QUEUE:
+  CASUAL:
+    JOIN-QUEUE: "You joined the casual match queue."

@@ -1,6 +1,5 @@
 package com.qrakn.lux.match.ladder;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

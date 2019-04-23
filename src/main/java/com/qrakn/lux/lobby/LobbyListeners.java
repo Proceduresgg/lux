@@ -1,6 +1,6 @@
 package com.qrakn.lux.lobby;
 
-import com.qrakn.lux.config.LuxConfiguration;
+import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.match.queue.menu.CasualMatchQueueMenu;
 import com.qrakn.lux.util.MessageUtils;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ public class LobbyListeners implements Listener {
 
         Lobby.spawn(player);
 
-        LuxConfiguration.getMessages().getConfig().getStringList("join-messages")
+        LuxConfig.getMessages().getConfig().getStringList("JOIN-MESSAGES")
                 .forEach(message -> player.sendMessage(MessageUtils.color(message)));
     }
 
