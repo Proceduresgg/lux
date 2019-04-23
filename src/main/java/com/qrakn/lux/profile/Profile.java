@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class Profile {
 
-    @Getter private static Map<UUID, Profile> profiles = new HashMap<>();
+    @Getter private final static Map<UUID, Profile> profiles = new HashMap<>();
 
     private final UUID uuid;
     private final String name;

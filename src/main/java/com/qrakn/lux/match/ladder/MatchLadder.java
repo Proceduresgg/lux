@@ -13,7 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MatchLadder {
 
-    @Getter private static Map<String, MatchLadder> ladders = new HashMap<>();
+    @Getter private final static Map<String, MatchLadder> ladders = new HashMap<>();
 
     private final String name;
 

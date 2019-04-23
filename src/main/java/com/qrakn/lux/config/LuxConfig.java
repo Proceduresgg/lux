@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class LuxConfig {
 
-    @Getter private static FileConfig messages = new FileConfig("messages.yml");
-    @Getter private static FileConfig items = new FileConfig("items.yml");
+    @Getter private final static FileConfig messages = new FileConfig("messages.yml");
+    @Getter private final static FileConfig items = new FileConfig("items.yml");
 
     public static String getMessage(String path) {
         return messages.getConfig().getString(path);
