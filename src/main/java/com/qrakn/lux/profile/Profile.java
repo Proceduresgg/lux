@@ -24,8 +24,10 @@ public class Profile {
         return this;
     }
 
-    public static void save() {
+    public void save() {}
 
+    public static void saveProfiles() {
+        profiles.values().forEach(Profile::save);
     }
 
     public static Profile getProfile(UUID uuid) {

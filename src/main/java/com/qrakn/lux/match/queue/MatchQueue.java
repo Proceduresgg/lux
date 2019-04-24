@@ -2,7 +2,8 @@ package com.qrakn.lux.match.queue;
 
 import com.qrakn.lux.match.ladder.MatchLadder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,5 +29,11 @@ public class MatchQueue {
         start();
     }
 
-    private void start() {}
+    private void start() {
+
+    }
+
+    public static void queue(Player player, MatchLadder ladder, boolean ranked) {
+
+    }
 }

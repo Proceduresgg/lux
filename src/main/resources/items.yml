@@ -1,7 +1,12 @@
+LOBBY:
+  CASUAL_ITEM:
+    NAME: "Unranked Queue"
+    LORE: "Right click to queue."
+
 QUEUE:
   CASUAL:
     TITLE: "&cCasual Queue"
     COLOR:
       NAME: "&c"
-      LORE-1: "&f"
-      LORE-2: "&c"
+      LORE_1: "&f"
+      LORE_2: "&c"

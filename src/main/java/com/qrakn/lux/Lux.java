@@ -18,14 +18,14 @@ public class Lux extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        new PhoenixGui(this); // Initializing the Menu API
+        new PhoenixGui(this);
 
         Arrays.asList(new LobbyListeners(), new ProfileListeners())
                 .forEach(this::registerListener);
     }
 
     public void onDisable() {
-        Profile.save();
+        Profile.saveProfiles();
     }
 
     private void registerListener(Listener listener) {
