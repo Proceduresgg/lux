@@ -17,7 +17,7 @@ public class MatchLadder {
 
     private final String name;
 
-    private ItemStack icon = new ItemStack(Material.AIR);
+    private ItemStack icon = new ItemStack(Material.DIAMOND);
 
     public static MatchLadder createLadder(String name) {
         MatchLadder ladder = new MatchLadder(name);
@@ -25,5 +25,9 @@ public class MatchLadder {
         ladders.put(name, ladder);
 
         return ladder;
+    }
+
+    public static void saveLadders() {
+
     }
 }

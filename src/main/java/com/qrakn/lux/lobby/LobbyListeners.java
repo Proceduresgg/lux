@@ -19,23 +19,29 @@ public class LobbyListeners implements Listener {
         Lobby.spawn(player);
 
         LuxConfig.getMessages().getConfig().getStringList("JOIN-MESSAGES")
-                .forEach(message -> player.sendMessage(MessageUtils.color(message)));
+                .stream()
+                .map(MessageUtils::color)
+                .forEach(player::sendMessage);
+
+        event.setJoinMessage(null);
     }
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            switch (event.getItem().getType()) {
-                case IRON_AXE:
-                    player.openInventory(new CasualMatchQueueMenu(player).getInventory());
-                    break;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-                case DIAMOND_AXE: break;
+        switch (event.getItem().getType()) {
+            case IRON_SWORD:
+                player.openInventory(new CasualMatchQueueMenu(player).getInventory());
+                break;
 
-                default: break;
-            }
+            case DIAMOND_AXE:
+                break;
+
+            default:
+                break;
         }
     }
 }

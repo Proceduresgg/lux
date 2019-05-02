@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 public class Lobby {
 
     private static ItemStack[] contents = {
-            new MenuItemBuilder(Material.IRON_AXE)
+            new MenuItemBuilder(Material.IRON_SWORD)
                     .name(LuxConfig.getColor("LOBBY.CASUAL_ITEM.NAME"))
                     .lore(LuxConfig.getColor("LOBBY.CASUAL_ITEM.LORE"))
                     .build()
@@ -21,5 +21,7 @@ public class Lobby {
         PlayerUtils.reset(player);
 
         player.getInventory().setContents(contents);
+
+        player.updateInventory();
     }
 }

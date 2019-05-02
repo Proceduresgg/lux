@@ -1,8 +1,12 @@
 package com.qrakn.lux;
 
+import co.aikar.commands.PaperCommandManager;
 import com.qrakn.lux.lobby.LobbyListeners;
+import com.qrakn.lux.match.ladder.MatchLadder;
+import com.qrakn.lux.match.ladder.MatchLadderCommand;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileListeners;
+import com.qrakn.lux.world.WorldListeners;
 import com.qrakn.phoenix.gui.PhoenixGui;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -20,12 +24,23 @@ public class Lux extends JavaPlugin {
 
         new PhoenixGui(this);
 
-        Arrays.asList(new LobbyListeners(), new ProfileListeners())
-                .forEach(this::registerListener);
+        registerListeners();
+        registerCommands(new PaperCommandManager(this));
     }
 
     public void onDisable() {
         Profile.saveProfiles();
+        MatchLadder.saveLadders();
+    }
+
+    private void registerListeners() {
+        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners())
+                .forEach(this::registerListener);
+    }
+
+    private void registerCommands(PaperCommandManager manager) {
+        Arrays.asList(new MatchLadderCommand())
+                .forEach(manager::registerCommand);
     }
 
     private void registerListener(Listener listener) {

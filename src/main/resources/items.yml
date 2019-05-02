@@ -1,11 +1,11 @@
 LOBBY:
   CASUAL_ITEM:
-    NAME: "Unranked Queue"
-    LORE: "Right click to queue."
+    NAME: "&aCasual Queue"
+    LORE: "&7Select to queue for casual."
 
 QUEUE:
   CASUAL:
-    TITLE: "&cCasual Queue"
+    TITLE: "&aCasual Queue"
     COLOR:
       NAME: "&c"
       LORE_1: "&f"

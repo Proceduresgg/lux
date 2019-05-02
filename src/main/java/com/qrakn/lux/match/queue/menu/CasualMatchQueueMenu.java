@@ -24,7 +24,10 @@ public class CasualMatchQueueMenu extends PlayerMenu {
                         .name(LuxConfig.getColor("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
                         .callback(ClickType.LEFT, () -> {
                             MatchQueue.queue(player, ladder, false);
-                            player.sendMessage(LuxConfig.getColoredMessage("QUEUE.CASUAL.JOIN-MESSAGE"));
+
+                            player.closeInventory();
+
+                            player.sendMessage(LuxConfig.getColoredMessage("QUEUE.CASUAL.JOIN-QUEUE"));
                         })
                         .build()));
 

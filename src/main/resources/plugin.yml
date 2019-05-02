@@ -1,0 +1,5 @@
+name: lux
+author: Procedures
+version: 0.1
+main: com.qrakn.lux.Lux
+description: kachow
