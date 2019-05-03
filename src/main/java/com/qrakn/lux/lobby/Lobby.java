@@ -11,8 +11,8 @@ public class Lobby {
 
     private static ItemStack[] contents = {
             new MenuItemBuilder(Material.IRON_SWORD)
-                    .name(LuxConfig.getColor("LOBBY.CASUAL_ITEM.NAME"))
-                    .lore(LuxConfig.getColor("LOBBY.CASUAL_ITEM.LORE"))
+                    .name(LuxConfig.INSTANCE.getColor("LOBBY.CASUAL_ITEM.NAME"))
+                    .lore(LuxConfig.INSTANCE.getColor("LOBBY.CASUAL_ITEM.LORE"))
                     .build()
                     .getItemStack()
     };

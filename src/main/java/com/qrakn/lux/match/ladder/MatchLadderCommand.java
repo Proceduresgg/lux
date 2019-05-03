@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
+import com.qrakn.lux.match.ladder.handler.MatchLadderHandler;
 import org.bukkit.entity.Player;
 
 @CommandAlias("ladders")
@@ -12,6 +13,6 @@ public class MatchLadderCommand extends BaseCommand {
 
     @Subcommand("create")
     public void onCreate(Player player, String name) {
-        MatchLadder.createLadder(name);
+        MatchLadderHandler.INSTANCE.createLadder(name);
     }
 }

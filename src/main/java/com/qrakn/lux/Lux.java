@@ -2,10 +2,10 @@ package com.qrakn.lux;
 
 import co.aikar.commands.PaperCommandManager;
 import com.qrakn.lux.lobby.LobbyListeners;
-import com.qrakn.lux.match.ladder.MatchLadder;
 import com.qrakn.lux.match.ladder.MatchLadderCommand;
-import com.qrakn.lux.profile.Profile;
+import com.qrakn.lux.match.ladder.handler.MatchLadderHandler;
 import com.qrakn.lux.profile.ProfileListeners;
+import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.world.WorldListeners;
 import com.qrakn.phoenix.gui.PhoenixGui;
 import lombok.Getter;
@@ -17,7 +17,8 @@ import java.util.Arrays;
 
 public class Lux extends JavaPlugin {
 
-    @Getter private static Lux instance;
+    @Getter
+    private static Lux instance;
 
     public void onEnable() {
         instance = this;
@@ -29,8 +30,8 @@ public class Lux extends JavaPlugin {
     }
 
     public void onDisable() {
-        Profile.saveProfiles();
-        MatchLadder.saveLadders();
+        ProfileHandler.INSTANCE.saveProfiles();
+        MatchLadderHandler.INSTANCE.saveLadders();
     }
 
     private void registerListeners() {

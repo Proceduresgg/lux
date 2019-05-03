@@ -1,8 +1,8 @@
 package com.qrakn.lux.match.queue.menu;
 
 import com.qrakn.lux.config.LuxConfig;
-import com.qrakn.lux.match.ladder.MatchLadder;
-import com.qrakn.lux.match.queue.MatchQueue;
+import com.qrakn.lux.match.ladder.handler.MatchLadderHandler;
+import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
 import com.qrakn.phoenix.gui.menu.PlayerMenu;
 import com.qrakn.phoenix.gui.menu.item.MenuItem;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
@@ -14,20 +14,20 @@ import java.util.List;
 public class CasualMatchQueueMenu extends PlayerMenu {
 
     public CasualMatchQueueMenu(Player player) {
-        super(player, 27, LuxConfig.getColor("QUEUE.CASUAL.TITLE"));
+        super(player, 27, LuxConfig.INSTANCE.getColor("QUEUE.CASUAL.TITLE"));
     }
 
     @Override
     public List<MenuItem> getItems(List<MenuItem> items) {
-        MatchLadder.getLadders().values()
+        MatchLadderHandler.INSTANCE.getLadders().values()
                 .forEach(ladder -> items.add(new MenuItemBuilder(ladder.getIcon().clone())
-                        .name(LuxConfig.getColor("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
+                        .name(LuxConfig.INSTANCE.getColor("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
                         .callback(ClickType.LEFT, () -> {
-                            MatchQueue.queue(player, ladder, false);
+                            MatchQueueHandler.INSTANCE.queue(player, ladder, false);
 
                             player.closeInventory();
 
-                            player.sendMessage(LuxConfig.getColoredMessage("QUEUE.CASUAL.JOIN-QUEUE"));
+                            player.sendMessage(LuxConfig.INSTANCE.getColoredMessage("QUEUE.CASUAL.JOIN-QUEUE"));
                         })
                         .build()));
 
@@ -35,5 +35,6 @@ public class CasualMatchQueueMenu extends PlayerMenu {
     }
 
     @Override
-    public void onClose() { }
+    public void onClose() {
+    }
 }
