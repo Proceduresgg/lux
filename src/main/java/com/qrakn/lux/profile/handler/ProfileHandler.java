@@ -15,15 +15,21 @@ public enum ProfileHandler {
 
     private final Map<UUID, Profile> profiles = new HashMap<>();
 
+    public void create(UUID uuid, String name) {
+        Profile profile = new Profile(uuid, name).load();
+
+        profiles.put(uuid, profile);
+    }
+
+    public void save() {
+        profiles.values().forEach(Profile::save);
+    }
+
     public Profile getProfile(UUID uuid) {
         return profiles.get(uuid);
     }
 
     public Profile getProfile(Player player) {
         return getProfile(player.getUniqueId());
-    }
-
-    public void saveProfiles() {
-        profiles.values().forEach(Profile::save);
     }
 }

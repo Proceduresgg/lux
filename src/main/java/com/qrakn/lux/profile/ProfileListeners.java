@@ -17,9 +17,7 @@ public class ProfileListeners implements Listener {
 
     @EventHandler
     public void onAsyncPrePlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
-        Profile profile = new Profile(event.getUniqueId(), event.getName()).load();
-
-        ProfileHandler.INSTANCE.getProfiles().put(event.getUniqueId(), profile);
+        ProfileHandler.INSTANCE.create(event.getUniqueId(), event.getName());
     }
 
     @EventHandler
@@ -29,9 +27,9 @@ public class ProfileListeners implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isLoseHunger()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isLoseHunger()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -41,9 +39,9 @@ public class ProfileListeners implements Listener {
         Player player = (Player) event.getEntity();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isTakeDamage()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isTakeDamage()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -53,9 +51,9 @@ public class ProfileListeners implements Listener {
         Player player = (Player) event.getDamager();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isDealDamage()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isDealDamage()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -63,9 +61,9 @@ public class ProfileListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isDropItem()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isDropItem()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -73,9 +71,9 @@ public class ProfileListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isPickupItem()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isPickupItem()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -83,9 +81,9 @@ public class ProfileListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isPlaceBlock()) return;
-
-        event.setCancelled(true);
+        if (profile.getState().isPlaceBlock()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -93,8 +91,8 @@ public class ProfileListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState().isBreakBlock()) return;
-
-        event.setCancelled(true);
+        if (!profile.getState().isBreakBlock()) {
+            event.setCancelled(true);
+        }
     }
 }

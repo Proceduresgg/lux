@@ -1,10 +1,10 @@
 package com.qrakn.lux.match.ladder.handler;
 
-import com.qrakn.lux.match.ladder.MatchLadder;
-import lombok.Getter;
+        import com.qrakn.lux.match.ladder.MatchLadder;
+        import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
+        import java.util.HashMap;
+        import java.util.Map;
 
 @Getter
 public enum MatchLadderHandler {
@@ -17,7 +17,7 @@ public enum MatchLadderHandler {
 
     }
 
-    public void saveLadders() {
+    public void save() {
         ladders.values().forEach(MatchLadder::save);
     }
 

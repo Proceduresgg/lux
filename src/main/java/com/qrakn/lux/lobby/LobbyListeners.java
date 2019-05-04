@@ -18,7 +18,7 @@ public class LobbyListeners implements Listener {
 
         Lobby.spawn(player);
 
-        LuxConfig.INSTANCE.getMessages().getConfig().getStringList("JOIN-MESSAGES")
+        LuxConfig.MESSAGES.getConfig().getStringList("JOIN-MESSAGES")
                 .stream()
                 .map(MessageUtils::color)
                 .forEach(player::sendMessage);

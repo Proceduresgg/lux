@@ -14,20 +14,20 @@ import java.util.List;
 public class CasualMatchQueueMenu extends PlayerMenu {
 
     public CasualMatchQueueMenu(Player player) {
-        super(player, 27, LuxConfig.INSTANCE.getColor("QUEUE.CASUAL.TITLE"));
+        super(player, 27, LuxConfig.ITEMS.getString("QUEUE.CASUAL.TITLE"));
     }
 
     @Override
     public List<MenuItem> getItems(List<MenuItem> items) {
         MatchLadderHandler.INSTANCE.getLadders().values()
                 .forEach(ladder -> items.add(new MenuItemBuilder(ladder.getIcon().clone())
-                        .name(LuxConfig.INSTANCE.getColor("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
+                        .name(LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
                         .callback(ClickType.LEFT, () -> {
                             MatchQueueHandler.INSTANCE.queue(player, ladder, false);
 
                             player.closeInventory();
 
-                            player.sendMessage(LuxConfig.INSTANCE.getColoredMessage("QUEUE.CASUAL.JOIN-QUEUE"));
+                            player.sendMessage(LuxConfig.ITEMS.getColoredString("QUEUE.CASUAL.JOIN-QUEUE"));
                         })
                         .build()));
 

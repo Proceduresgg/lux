@@ -30,8 +30,8 @@ public class Lux extends JavaPlugin {
     }
 
     public void onDisable() {
-        ProfileHandler.INSTANCE.saveProfiles();
-        MatchLadderHandler.INSTANCE.saveLadders();
+        ProfileHandler.INSTANCE.save();
+        MatchLadderHandler.INSTANCE.save();
     }
 
     private void registerListeners() {
