@@ -9,7 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public enum LuxConfig {
 
     ITEMS(new FileConfig(("items.yml"))),
-    MESSAGES(new FileConfig("messages.yml"));
+    MESSAGES(new FileConfig("messages.yml")),
+    ARENAS(new FileConfig("arenas.yml"));
 
     private final FileConfig config;
 

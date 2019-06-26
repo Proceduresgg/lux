@@ -1,7 +1,7 @@
 package com.qrakn.lux.lobby;
 
 import com.qrakn.lux.config.LuxConfig;
-import com.qrakn.lux.match.queue.menu.CasualMatchQueueMenu;
+import com.qrakn.lux.match.queue.menu.CasualQueueMenu;
 import com.qrakn.lux.util.MessageUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +34,7 @@ public class LobbyListeners implements Listener {
 
         switch (event.getItem().getType()) {
             case IRON_SWORD:
-                player.openInventory(new CasualMatchQueueMenu(player).getInventory());
+                player.openInventory(new CasualQueueMenu(player).getInventory());
                 break;
 
             case DIAMOND_AXE:

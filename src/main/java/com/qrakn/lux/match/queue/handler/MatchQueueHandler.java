@@ -1,7 +1,7 @@
 package com.qrakn.lux.match.queue.handler;
 
-import com.qrakn.lux.match.ladder.MatchLadder;
-import com.qrakn.lux.match.ladder.handler.MatchLadderHandler;
+import com.qrakn.lux.match.ladder.Ladder;
+import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.MatchQueue;
 import com.qrakn.lux.match.queue.MatchQueuePlayer;
 import com.qrakn.lux.profile.Profile;
@@ -18,14 +18,14 @@ public enum MatchQueueHandler {
 
     INSTANCE;
 
-    private final Map<MatchLadder, MatchQueue> queues = new HashMap<>();
+    private final Map<Ladder, MatchQueue> queues = new HashMap<>();
 
     public void init() {
-        MatchLadderHandler.INSTANCE.getLadders().values()
+        LadderHandler.INSTANCE.getLadders().values()
                 .forEach(ladder -> queues.put(ladder, new MatchQueue(ladder)));
     }
 
-    public void queue(Player player, MatchLadder ladder, boolean ranked) {
+    public void queue(Player player, Ladder ladder, boolean ranked) {
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
         profile.setState(ProfileState.QUEUE);

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class MatchLadder {
+public class Ladder {
 
     private final String name;
 

@@ -1,9 +1,12 @@
 package com.qrakn.lux;
 
 import co.aikar.commands.PaperCommandManager;
+import com.bizarrealex.aether.Aether;
+import com.qrakn.lux.board.LuxBoardAdapter;
 import com.qrakn.lux.lobby.LobbyListeners;
-import com.qrakn.lux.match.ladder.MatchLadderCommand;
-import com.qrakn.lux.match.ladder.handler.MatchLadderHandler;
+import com.qrakn.lux.match.arena.handler.ArenaHandler;
+import com.qrakn.lux.match.ladder.LadderCommand;
+import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.profile.ProfileListeners;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.world.WorldListeners;
@@ -24,6 +27,9 @@ public class Lux extends JavaPlugin {
         instance = this;
 
         new PhoenixGui(this);
+        new Aether(this, new LuxBoardAdapter());
+
+        ArenaHandler.INSTANCE.init();
 
         registerListeners();
         registerCommands(new PaperCommandManager(this));
@@ -31,7 +37,7 @@ public class Lux extends JavaPlugin {
 
     public void onDisable() {
         ProfileHandler.INSTANCE.save();
-        MatchLadderHandler.INSTANCE.save();
+        LadderHandler.INSTANCE.save();
     }
 
     private void registerListeners() {
@@ -40,7 +46,7 @@ public class Lux extends JavaPlugin {
     }
 
     private void registerCommands(PaperCommandManager manager) {
-        Arrays.asList(new MatchLadderCommand())
+        Arrays.asList(new LadderCommand())
                 .forEach(manager::registerCommand);
     }
 

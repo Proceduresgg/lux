@@ -1,7 +1,7 @@
 package com.qrakn.lux.match.queue;
 
 import com.qrakn.lux.Lux;
-import com.qrakn.lux.match.ladder.MatchLadder;
+import com.qrakn.lux.match.ladder.Ladder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
@@ -13,9 +13,9 @@ public class MatchQueue {
 
     private final Queue<MatchQueuePlayer> queue = new LinkedList<>();
 
-    private final MatchLadder ladder;
+    private final Ladder ladder;
 
-    public MatchQueue(MatchLadder ladder) {
+    public MatchQueue(Ladder ladder) {
         this.ladder = ladder;
 
         start();
