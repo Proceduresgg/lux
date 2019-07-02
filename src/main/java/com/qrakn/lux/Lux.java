@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import com.bizarrealex.aether.Aether;
 import com.qrakn.lux.board.LuxBoardAdapter;
 import com.qrakn.lux.lobby.LobbyListeners;
+import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
@@ -46,7 +47,7 @@ public class Lux extends JavaPlugin {
     }
 
     private void registerCommands(PaperCommandManager manager) {
-        Arrays.asList(new LadderCommand())
+        Arrays.asList(new LadderCommand(), new ArenaCommand())
                 .forEach(manager::registerCommand);
     }
 
