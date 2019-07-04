@@ -15,6 +15,7 @@ public enum ArenaSchematicHandler {
     private final Map<String, ArenaSchematic> schematics = new HashMap<>();
 
     public void handleSchematic(File schematic) {
+        System.out.println("schematic");
         schematics.put(FileUtils.getFileName(schematic), new ArenaSchematic(schematic));
     }
 }

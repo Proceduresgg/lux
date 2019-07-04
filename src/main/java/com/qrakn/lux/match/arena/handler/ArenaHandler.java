@@ -3,10 +3,10 @@ package com.qrakn.lux.match.arena.handler;
 import com.qrakn.lux.Lux;
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.arena.data.ArenaBounds;
+import com.qrakn.lux.match.arena.data.ArenaLocationPair;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematic;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematicHandler;
 import com.qrakn.lux.util.FileUtils;
-import javafx.util.Pair;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,7 +20,7 @@ public enum ArenaHandler {
 
     INSTANCE;
 
-    private final Map<Pair<Integer, Integer>, Arena> grid = new HashMap<>();
+    private final Map<ArenaLocationPair, Arena> grid = new HashMap<>();
 
     private World world;
 
@@ -46,13 +46,19 @@ public enum ArenaHandler {
 
         if (schematics != null) {
             Arrays.stream(schematics)
-                    .filter(file -> FileUtils.getFileExtension(file).equals("schematic"))
-                    .forEach(ArenaSchematicHandler.INSTANCE::handleSchematic);
+//                    .filter(file -> FileUtils.getFileExtension(file).equals("schematic"))
+                    .forEach(schematic -> {
+                        ArenaSchematicHandler.INSTANCE.handleSchematic(schematic);
+
+                        System.out.println("LOLOL " + FileUtils.getFileName(schematic));
+                    });
         }
+
+        ArenaSchematicHandler.INSTANCE.getSchematics().values().forEach(ArenaSchematic::getModelArena);
     }
 
     public Arena createArena(ArenaSchematic schematic) {
-        Pair<Integer, Integer> position = getEmptyPosition(schematic);
+        ArenaLocationPair position = getEmptyPosition(schematic);
 
         Arena arena = new Arena(schematic).pasteArena(position);
 
@@ -61,11 +67,11 @@ public enum ArenaHandler {
         return arena;
     }
 
-    public Pair<Integer, Integer> getEmptyPosition(ArenaSchematic schematic) {
-        Pair<Integer, Integer> position = new Pair<>(getRow(schematic), 0);
+    public ArenaLocationPair getEmptyPosition(ArenaSchematic schematic) {
+        ArenaLocationPair position = new ArenaLocationPair(getRow(schematic), 0);
 
         while (grid.containsKey(position)) {
-            position = new Pair<>(getRow(schematic), position.getValue()); // z
+            position = new ArenaLocationPair(getRow(schematic), position.getZ()); // z
         }
 
         return position;
@@ -100,5 +106,17 @@ public enum ArenaHandler {
                 .forEach(arena -> counted.add(arena.getSchematic()));
 
         return counted.size();
+    }
+
+    public Arena getOrCreateModel(ArenaSchematic schematic) {
+        ArenaLocationPair position = new ArenaLocationPair(getRow(schematic), 0);
+        Arena arena = grid.get(position);
+
+        if (arena == null) {
+            arena = new Arena(schematic).pasteArena(position);
+            grid.put(position, arena);
+        }
+
+        return arena;
     }
 }

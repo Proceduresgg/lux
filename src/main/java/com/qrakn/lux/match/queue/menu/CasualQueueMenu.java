@@ -27,7 +27,7 @@ public class CasualQueueMenu extends PlayerMenu {
 
                             player.closeInventory();
 
-                            player.sendMessage(LuxConfig.ITEMS.getColoredString("QUEUE.CASUAL.JOIN-QUEUE"));
+                            player.sendMessage("ADDED U TO THE QUEUE !!");
                         })
                         .build()));
 

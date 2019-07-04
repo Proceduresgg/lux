@@ -2,7 +2,9 @@ package com.qrakn.lux.match.arena.schematic;
 
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.arena.data.ArenaBounds;
-import lombok.Data;
+import com.qrakn.lux.match.arena.handler.ArenaHandler;
+import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicBlock;
+import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicLocation;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
@@ -49,11 +51,11 @@ public class ArenaSchematic {
     }
 
     private void load() {
-        for (int x = 0; x <= width; x++) {
-            for (int y = 0; y <= height; y++) {
-                for (int z = 0; z <= length; z++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                for (int z = 0; z < length; z++) {
                     int index = (y * length + z) * width + x;
-                    int id = blocksArray[index] & 0xFF;
+                    int id = blocksArray[index] & 255;
 
                     MaterialData data = new MaterialData(id, getData()[index]);
 
@@ -88,8 +90,8 @@ public class ArenaSchematic {
             Location location = new Location(world, x + arenaLocation.getX(), y + arenaLocation.getY(), z + arenaLocation.getZ());
             Block block = location.getBlock();
 
-            block.setType(arenaBlock.material.getItemType());
-            block.setData(arenaBlock.material.getData(), true);
+            block.setType(arenaBlock.getMaterial().getItemType());
+            block.setData(arenaBlock.getMaterial().getData(), true);
             block.getState().update();
 
             NBTTagCompound tile = arenaBlock.getTile();
@@ -102,15 +104,7 @@ public class ArenaSchematic {
         });
     }
 
-    @Data
-    class ArenaSchematicLocation {
-        private final int x, y, z;
-    }
-
-    @Data
-    class ArenaSchematicBlock {
-        private final MaterialData material;
-
-        private NBTTagCompound tile = null;
+    public Arena getModelArena() {
+        return ArenaHandler.INSTANCE.getOrCreateModel(this);
     }
 }
