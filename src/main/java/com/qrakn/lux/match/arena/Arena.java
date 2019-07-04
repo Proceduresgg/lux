@@ -1,5 +1,6 @@
 package com.qrakn.lux.match.arena;
 
+import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.match.arena.data.ArenaBounds;
 import com.qrakn.lux.match.arena.data.ArenaLocationPair;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
@@ -33,13 +34,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class Arena {
 
-    private final List<Location> spawns = new ArrayList<>();
-
     private final ArenaSchematic schematic;
 
-    private boolean avaiable = true;
+    private final ArenaLocationPair locationPair;
+
+    private List<Location> spawns = new ArrayList<>();
+
+    private boolean available = true;
 
     private ArenaBounds bounds;
+
+    public Arena(ArenaSchematic schematic, ArenaLocationPair locationPair, List<Location> spawns, ArenaBounds bounds) {
+        this.schematic = schematic;
+        this.locationPair = locationPair;
+        this.spawns = spawns;
+        this.bounds = bounds;
+    }
 
     public void load(Runnable callback) {
         int minX = bounds.getMinX();
@@ -56,6 +66,14 @@ public class Arena {
                 });
             }
         }
+    }
+
+    public void save() {
+        String loc = locationPair.toString();
+
+        LuxConfig.ARENAS.set("ARENAS." + loc + ".SPAWNS", spawns);
+        LuxConfig.ARENAS.set("ARENAS." + loc + ".SCHEMATIC", schematic.getName());
+        LuxConfig.ARENAS.set("ARENAS." + loc + ".BOUNDS", bounds.toString());
     }
 
     public void copyTo(Arena arena) {
@@ -167,7 +185,18 @@ public class Arena {
         int x = pair.getX() * 500;
         int z = pair.getZ() * 500;
 
-        schematic.paste(this, ArenaHandler.INSTANCE.getWorld(), x, 90, z);
+        if (z == 0) {
+            schematic.paste(this, ArenaHandler.INSTANCE.getWorld(), x, 90, z);
+        } else {
+            Arena model = schematic.getModelArena();
+            ArenaBounds modelBounds = model.getBounds();
+
+            this.bounds = new ArenaBounds(x, x + (modelBounds.getMaxX() - modelBounds.getMinX()), z,
+                    z + (modelBounds.getMaxZ() - modelBounds.getMinZ()), modelBounds.getMinY(),
+                    90 + (modelBounds.getMaxY() - modelBounds.getMinY())); // height = 90
+
+            model.copyTo(this);
+        }
 
         return this;
     }

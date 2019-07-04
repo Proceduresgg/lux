@@ -23,4 +23,8 @@ public enum LuxConfig {
     public String getColoredString(String path) {
         return MessageUtils.color(getString(path));
     }
+
+    public void set(String path, Object value) {
+        config.getConfig().set(path, value);
+    }
 }

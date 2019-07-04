@@ -5,6 +5,7 @@ import com.qrakn.lux.match.arena.data.ArenaBounds;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicBlock;
 import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicLocation;
+import com.qrakn.lux.util.FileUtils;
 import lombok.Getter;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
@@ -25,6 +26,8 @@ public class ArenaSchematic {
 
     private final Map<ArenaSchematicLocation, ArenaSchematicBlock> blocks = new HashMap<>();
 
+    private final String name;
+
     private int width, height, length;
 
     private byte[] data, blocksArray;
@@ -34,6 +37,8 @@ public class ArenaSchematic {
     private boolean loaded = false;
 
     public ArenaSchematic(File schematic) {
+        this.name = FileUtils.getFileName(schematic);
+
         try {
             NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(schematic));
 

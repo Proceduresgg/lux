@@ -1,6 +1,7 @@
 package com.qrakn.lux.match.arena.handler;
 
 import com.qrakn.lux.Lux;
+import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.arena.data.ArenaBounds;
 import com.qrakn.lux.match.arena.data.ArenaLocationPair;
@@ -9,6 +10,7 @@ import com.qrakn.lux.match.arena.schematic.ArenaSchematicHandler;
 import com.qrakn.lux.util.FileUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
@@ -54,13 +56,26 @@ public enum ArenaHandler {
                     });
         }
 
+        for (String pair : LuxConfig.ARENAS.getConfig().getStringList("ARENAS")) {
+            ArenaLocationPair locationPair = ArenaLocationPair.fromString(pair);
+            ArenaSchematic schematic = ArenaSchematicHandler.INSTANCE.getSchematics().get(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".SCHEMATIC"));
+            List<Location> spawns = (List<Location>) LuxConfig.ARENAS.getConfig().get("ARENAS." + pair + "SPAWNS");
+            ArenaBounds bounds = ArenaBounds.fromString(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".BOUNDS"));
+
+            grid.put(locationPair, new Arena(schematic, locationPair, spawns, bounds));
+        }
+
         ArenaSchematicHandler.INSTANCE.getSchematics().values().forEach(ArenaSchematic::getModelArena);
+    }
+
+    public void save() {
+        grid.values().forEach(Arena::save);
     }
 
     public Arena createArena(ArenaSchematic schematic) {
         ArenaLocationPair position = getEmptyPosition(schematic);
 
-        Arena arena = new Arena(schematic).pasteArena(position);
+        Arena arena = new Arena(schematic, position).pasteArena(position);
 
         grid.put(position, arena);
 
@@ -88,13 +103,8 @@ public enum ArenaHandler {
             }
         }
 
-        switch (getRows()) {
-            case 0:
-                return 0;
-
-            default:
-                return getRows() + 1;
-        }
+        int rows = getRows();
+        return rows == 0 ? 0 : rows + 1;
     }
 
     public int getRows() {
@@ -113,7 +123,7 @@ public enum ArenaHandler {
         Arena arena = grid.get(position);
 
         if (arena == null) {
-            arena = new Arena(schematic).pasteArena(position);
+            arena = new Arena(schematic, position).pasteArena(position);
             grid.put(position, arena);
         }
 

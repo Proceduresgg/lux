@@ -14,4 +14,16 @@ public class ArenaBounds {
     public int getHeight() { return maxY - minY; }
 
     public int getLength() { return maxZ - minZ; }
+
+    @Override
+    public String toString() {
+        return minX + ":" + maxX + ":" + minZ + ":" + maxZ + ":" + minY + ":" + maxY;
+    }
+
+    public static ArenaBounds fromString(String string) {
+        String[] split = string.split(":");
+
+        return new ArenaBounds(Integer.valueOf(split[0]), Integer.valueOf(split[1]), Integer.valueOf(split[2]),
+                Integer.valueOf(split[3]), Integer.valueOf(split[4]), Integer.valueOf(split[5]));
+    }
 }
