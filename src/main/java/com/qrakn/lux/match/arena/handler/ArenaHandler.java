@@ -16,6 +16,8 @@ import org.bukkit.WorldCreator;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Getter
 public enum ArenaHandler {
@@ -86,7 +88,7 @@ public enum ArenaHandler {
         ArenaLocationPair position = new ArenaLocationPair(getRow(schematic), 0);
 
         while (grid.containsKey(position)) {
-            position = new ArenaLocationPair(getRow(schematic), position.getZ()); // z
+            position = new ArenaLocationPair(getRow(schematic), position.getZ() + 1); // z
         }
 
         return position;
@@ -128,5 +130,15 @@ public enum ArenaHandler {
         }
 
         return arena;
+    }
+
+    public Arena getRandomArena() {
+        List<Arena> available = grid.values()
+                .stream()
+                .filter(arena -> !arena.isModelArena())
+                .filter(Arena::isAvailable)
+                .collect(Collectors.toList());
+
+        return available.get(ThreadLocalRandom.current().nextInt(0, available.size()));
     }
 }

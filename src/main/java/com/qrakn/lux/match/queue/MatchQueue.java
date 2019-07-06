@@ -2,6 +2,9 @@ package com.qrakn.lux.match.queue;
 
 import com.qrakn.lux.Lux;
 import com.qrakn.lux.lobby.Lobby;
+import com.qrakn.lux.match.Match;
+import com.qrakn.lux.match.arena.handler.ArenaHandler;
+import com.qrakn.lux.match.impl.SinglesMatch;
 import com.qrakn.lux.match.ladder.Ladder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -34,8 +37,8 @@ public class MatchQueue {
                     queue.remove(player);
                     queue.remove(opponent);
 
-                    Lobby.spawn(player.getPlayer());
-                    Lobby.spawn(opponent.getPlayer());
+                    new SinglesMatch(player.getPlayer(), opponent.getPlayer(), false, ladder,
+                            ArenaHandler.INSTANCE.getRandomArena());
                 }
             }
         }, 0L, 10L);
