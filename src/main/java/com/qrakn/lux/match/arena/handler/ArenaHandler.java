@@ -50,7 +50,7 @@ public enum ArenaHandler {
 
         if (schematics != null) {
             Arrays.stream(schematics)
-//                    .filter(file -> FileUtils.getFileExtension(file).equals("schematic"))
+                    .filter(file -> FileUtils.getFileExtension(file).equals(".schematic"))
                     .forEach(schematic -> {
                         ArenaSchematicHandler.INSTANCE.handleSchematic(schematic);
 
@@ -58,10 +58,10 @@ public enum ArenaHandler {
                     });
         }
 
-        for (String pair : LuxConfig.ARENAS.getConfig().getStringList("ARENAS")) {
+        for (String pair : LuxConfig.ARENAS.getFileConfiguration().getStringList("ARENAS")) {
             ArenaLocationPair locationPair = ArenaLocationPair.fromString(pair);
             ArenaSchematic schematic = ArenaSchematicHandler.INSTANCE.getSchematics().get(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".SCHEMATIC"));
-            List<Location> spawns = (List<Location>) LuxConfig.ARENAS.getConfig().get("ARENAS." + pair + "SPAWNS");
+            List<Location> spawns = (List<Location>) LuxConfig.ARENAS.getFileConfiguration().get("ARENAS." + pair + "SPAWNS");
             ArenaBounds bounds = ArenaBounds.fromString(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".BOUNDS"));
 
             grid.put(locationPair, new Arena(schematic, locationPair, spawns, bounds));

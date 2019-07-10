@@ -3,12 +3,14 @@ package com.qrakn.lux.lobby;
 import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.match.queue.menu.CasualQueueMenu;
 import com.qrakn.lux.util.MessageUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class LobbyListeners implements Listener {
 
@@ -18,7 +20,7 @@ public class LobbyListeners implements Listener {
 
         Lobby.spawn(player);
 
-        LuxConfig.MESSAGES.getConfig().getStringList("JOIN-MESSAGES")
+        LuxConfig.MESSAGES.getFileConfiguration().getStringList("JOIN-MESSAGES")
                 .stream()
                 .map(MessageUtils::color)
                 .forEach(player::sendMessage);
@@ -43,5 +45,13 @@ public class LobbyListeners implements Listener {
             default:
                 break;
         }
+    }
+
+    @EventHandler
+    public void onWorldLoadEvent(WorldLoadEvent event) {
+        event.getWorld().getEntities()
+                .stream()
+                .filter(it -> !(it instanceof Player))
+                .forEach(Entity::remove);
     }
 }

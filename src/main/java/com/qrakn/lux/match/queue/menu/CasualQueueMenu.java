@@ -6,6 +6,7 @@ import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
 import com.qrakn.phoenix.gui.menu.PlayerMenu;
 import com.qrakn.phoenix.gui.menu.item.MenuItem;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -27,7 +28,7 @@ public class CasualQueueMenu extends PlayerMenu {
 
                             player.closeInventory();
 
-                            player.sendMessage("ADDED U TO THE QUEUE !!");
+                            player.sendMessage(ChatColor.GRAY + "Added you to the " + ChatColor.GOLD + ladder.getName() + ChatColor.GRAY + " queue!");
                         })
                         .build()));
 

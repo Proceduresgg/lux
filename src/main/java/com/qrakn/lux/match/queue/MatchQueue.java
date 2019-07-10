@@ -1,16 +1,15 @@
 package com.qrakn.lux.match.queue;
 
 import com.qrakn.lux.Lux;
-import com.qrakn.lux.lobby.Lobby;
-import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
+import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.match.impl.SinglesMatch;
 import com.qrakn.lux.match.ladder.Ladder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
-import javax.persistence.Lob;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class MatchQueue {
@@ -29,17 +28,18 @@ public class MatchQueue {
         Bukkit.getScheduler().runTaskTimer(Lux.getInstance(), () -> {
             while (queue.size() > 1) {
                 MatchQueuePlayer player = queue.get(0);
-                Optional<MatchQueuePlayer> optional = queue.stream().filter(it -> it.canFight(player)).findFirst();
+                queue.stream()
+                        .filter(it -> it != player)
+                        .filter(it -> it.canFight(player))
+                        .findFirst()
+                        .ifPresent(opponent -> {
+                            queue.remove(player);
+                            queue.remove(opponent);
 
-                if (optional.isPresent()) {
-                    MatchQueuePlayer opponent = optional.get();
-
-                    queue.remove(player);
-                    queue.remove(opponent);
-
-                    new SinglesMatch(player.getPlayer(), opponent.getPlayer(), false, ladder,
-                            ArenaHandler.INSTANCE.getRandomArena());
-                }
+                            MatchHandler.INSTANCE.getMatches()
+                                    .add(new SinglesMatch(player.getPlayer(), opponent.getPlayer(), false, ladder,
+                                            ArenaHandler.INSTANCE.getRandomArena()));
+                        });
             }
         }, 0L, 10L);
     }

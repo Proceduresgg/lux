@@ -49,6 +49,8 @@ public class Arena {
         this.locationPair = locationPair;
         this.spawns = spawns;
         this.bounds = bounds;
+
+        save();
     }
 
     public void load(Runnable callback) {
@@ -71,9 +73,11 @@ public class Arena {
     public void save() {
         String loc = locationPair.toString();
 
-        LuxConfig.ARENAS.set("ARENAS." + loc + ".SPAWNS", spawns);
+        LuxConfig.ARENAS.getFileConfiguration().set("ARENAS." + loc + ".SPAWNS", spawns);
         LuxConfig.ARENAS.set("ARENAS." + loc + ".SCHEMATIC", schematic.getName());
         LuxConfig.ARENAS.set("ARENAS." + loc + ".BOUNDS", bounds.toString());
+
+        LuxConfig.ARENAS.getConfig().save();
     }
 
     public void copyTo(Arena arena) {
@@ -162,7 +166,7 @@ public class Arena {
                                 spawnPoint.add(0.5, 1.0, 0.5);
                             }
 
-                            spawnPoint.setYaw(AngleUtils.faceToYaw(skull.getRotation()) + 90);
+                            spawnPoint.setYaw(AngleUtils.faceToYaw(skull.getRotation()) + 90.0F);
 
                             spawns.add(spawnPoint);
                             block.setType(Material.AIR);

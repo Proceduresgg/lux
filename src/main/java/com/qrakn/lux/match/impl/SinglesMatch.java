@@ -1,11 +1,21 @@
 package com.qrakn.lux.match.impl;
 
+import com.qrakn.lux.Lux;
+import com.qrakn.lux.lobby.Lobby;
 import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.ladder.Ladder;
+import com.qrakn.lux.profile.Profile;
+import com.qrakn.lux.profile.ProfileState;
+import com.qrakn.lux.profile.handler.ProfileHandler;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+
+import javax.persistence.Lob;
+import java.util.Arrays;
 
 @Getter
 public class SinglesMatch extends Match {
@@ -27,5 +37,38 @@ public class SinglesMatch extends Match {
 
         player.sendMessage(ChatColor.RED + "STARTED MATCH.");
         opponent.sendMessage(ChatColor.RED + "STARTED MATCH");
+
+        Profile playerProfile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile opponentProfile = ProfileHandler.INSTANCE.getProfile(opponent);
+
+        playerProfile.setState(ProfileState.MATCH);
+        opponentProfile.setState(ProfileState.MATCH);
+
+        getLadder().getDefaultKit().apply(player);
+        getLadder().getDefaultKit().apply(opponent);
+    }
+
+    public void handleDeath(Player player) {
+        getOpposite(player).playSound(player.getLocation(), Sound.AMBIENCE_THUNDER, 10F, 10F);
+
+        end(getOpposite(player), player);
+    }
+
+    private void end(Player winner, Player loser) {
+        Arrays.asList(winner, loser)
+                .forEach(it -> {
+                    it.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Winner: " + ChatColor.RESET + ChatColor.YELLOW + winner.getName());
+                });
+
+        Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {
+            Lobby.spawn(winner);
+            Lobby.spawn(player);
+        }, 50L);
+
+        getArena().setAvailable(true);
+    }
+
+    private Player getOpposite(Player player) {
+        return player == getPlayer() ? opponent : getPlayer();
     }
 }

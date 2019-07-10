@@ -1,5 +1,6 @@
 package com.qrakn.lux.match.ladder;
 
+import com.qrakn.lux.match.kit.MatchKit;
 import com.qrakn.lux.match.queue.MatchQueue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class Ladder {
     private int priority = 0;
 
     private ItemStack icon = new ItemStack(Material.DIAMOND);
+
+    private MatchKit defaultKit = new MatchKit(null, null);
 
     public void save() {
 

@@ -1,6 +1,7 @@
 package com.qrakn.lux.profile;
 
 import com.qrakn.lux.profile.handler.ProfileHandler;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -81,6 +82,8 @@ public class ProfileListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
+        if (player.getGameMode() == GameMode.CREATIVE) return;
+
         if (profile.getState().isPlaceBlock()) {
             event.setCancelled(true);
         }
@@ -90,6 +93,8 @@ public class ProfileListeners implements Listener {
     public void onBlockBreakEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+
+        if (player.getGameMode() == GameMode.CREATIVE) return;
 
         if (!profile.getState().isBreakBlock()) {
             event.setCancelled(true);

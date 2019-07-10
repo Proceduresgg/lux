@@ -3,6 +3,7 @@ package com.qrakn.lux.lobby;
 import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.util.PlayerUtils;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +20,8 @@ public class Lobby {
 
     public static void spawn(Player player) {
         PlayerUtils.reset(player);
+
+        player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 
         player.getInventory().setContents(contents);
 

@@ -3,7 +3,9 @@ package com.qrakn.lux;
 import co.aikar.commands.PaperCommandManager;
 import com.bizarrealex.aether.Aether;
 import com.qrakn.lux.board.LuxBoardAdapter;
+import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.lobby.LobbyListeners;
+import com.qrakn.lux.match.MatchListeners;
 import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
@@ -37,13 +39,15 @@ public class Lux extends JavaPlugin {
     }
 
     public void onDisable() {
+        LuxConfig.save();
+
         ProfileHandler.INSTANCE.save();
         LadderHandler.INSTANCE.save();
         ArenaHandler.INSTANCE.save();
     }
 
     private void registerListeners() {
-        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners())
+        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners())
                 .forEach(this::registerListener);
     }
 
