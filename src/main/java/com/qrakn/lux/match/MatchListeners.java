@@ -2,6 +2,7 @@ package com.qrakn.lux.match;
 
 import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.profile.handler.ProfileHandler;
+import com.qrakn.lux.util.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,5 +18,9 @@ public class MatchListeners implements Listener {
         Player player = event.getEntity();
 
         MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
+
+        player.setHealth(20);
+
+        PlayerUtils.reset(player);
     }
 }

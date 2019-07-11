@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import javax.persistence.Lob;
 import java.util.Arrays;
 
 @Getter
@@ -35,8 +34,8 @@ public class SinglesMatch extends Match {
         player.teleport(getArena().getSpawns().get(0));
         opponent.teleport(getArena().getSpawns().get(1));
 
-        player.sendMessage(ChatColor.RED + "STARTED MATCH.");
-        opponent.sendMessage(ChatColor.RED + "STARTED MATCH");
+        player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Opponent: " + ChatColor.YELLOW + opponent.getName());
+        opponent.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Opponent: " + ChatColor.YELLOW + player.getName());
 
         Profile playerProfile = ProfileHandler.INSTANCE.getProfile(player);
         Profile opponentProfile = ProfileHandler.INSTANCE.getProfile(opponent);
@@ -49,9 +48,14 @@ public class SinglesMatch extends Match {
     }
 
     public void handleDeath(Player player) {
-        getOpposite(player).playSound(player.getLocation(), Sound.AMBIENCE_THUNDER, 10F, 10F);
+        Player opposite = getOpposite(player);
 
-        end(getOpposite(player), player);
+        opposite.playSound(player.getLocation(), Sound.AMBIENCE_THUNDER, 10F, 10F);
+
+        opposite.hidePlayer(player);
+        opposite.getInventory().clear();
+
+        end(opposite, player);
     }
 
     private void end(Player winner, Player loser) {

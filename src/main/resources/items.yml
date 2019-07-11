@@ -7,6 +7,6 @@ QUEUE:
   CASUAL:
     TITLE: "&aCasual Queue"
     COLOR:
-      NAME: "&c"
+      NAME: "&6"
       LORE_1: "&f"
-      LORE_2: "&c"
+      LORE_2: "&6"

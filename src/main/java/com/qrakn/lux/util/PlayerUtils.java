@@ -21,6 +21,7 @@ public class PlayerUtils {
         player.setMaximumNoDamageTicks(20);
 
         player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
 
         player.getActivePotionEffects()
                 .stream()

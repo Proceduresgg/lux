@@ -23,6 +23,8 @@ public class CasualQueueMenu extends PlayerMenu {
         LadderHandler.INSTANCE.getLadders().values()
                 .forEach(ladder -> items.add(new MenuItemBuilder(ladder.getIcon().clone())
                         .name(LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.NAME") + ladder.getName())
+                        .lore(LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.LORE_1") + "Playing: " + LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.LORE_2") + ladder.getPlaying())
+                        .lore(LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.LORE_1") + "Queuing: " + LuxConfig.ITEMS.getString("QUEUE.CASUAL.COLOR.LORE_2") + ladder.getQueuing())
                         .callback(ClickType.LEFT, () -> {
                             MatchQueueHandler.INSTANCE.queue(player, ladder, false);
 

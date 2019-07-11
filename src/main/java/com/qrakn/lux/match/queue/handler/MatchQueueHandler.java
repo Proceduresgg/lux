@@ -19,11 +19,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
 public enum MatchQueueHandler {
 
     INSTANCE;
+
+    private final Map<UUID, MatchQueuePlayer> matchQueuePlayers = new HashMap<>();
 
     private ItemStack[] contents = {
             new MenuItemBuilder(Material.INK_SACK)
@@ -42,6 +45,12 @@ public enum MatchQueueHandler {
         player.getInventory().setContents(contents);
         player.updateInventory();
 
-        ladder.getQueue().getQueue().add(new MatchQueuePlayer(player, ranked));
+        matchQueuePlayers.put(player.getUniqueId(), new MatchQueuePlayer(player, ladder.getQueue(), ranked));
+    }
+
+    public void exit(Player player) {
+        matchQueuePlayers.get(player.getUniqueId()).exit();
+
+        player.sendMessage(ChatColor.GRAY + "Exited the queue.");
     }
 }

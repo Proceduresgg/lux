@@ -10,6 +10,7 @@ import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
+import com.qrakn.lux.match.queue.listener.MatchQueueListeners;
 import com.qrakn.lux.profile.ProfileListeners;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.world.WorldListeners;
@@ -47,7 +48,8 @@ public class Lux extends JavaPlugin {
     }
 
     private void registerListeners() {
-        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners())
+        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
+                new MatchQueueListeners())
                 .forEach(this::registerListener);
     }
 
