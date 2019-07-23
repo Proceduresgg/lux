@@ -31,8 +31,9 @@ public class LobbyListeners implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        
 
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getItem() == null) return;
 
         switch (event.getItem().getType()) {
             case IRON_SWORD:

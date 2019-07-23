@@ -30,6 +30,6 @@ public enum ProfileHandler {
     }
 
     public Profile getProfile(Player player) {
-        return getProfile(player.getUniqueId());
+        return profiles.computeIfAbsent(player.getUniqueId(), k -> new Profile(player.getUniqueId(), player.getName()));
     }
 }

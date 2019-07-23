@@ -61,7 +61,9 @@ public class SinglesMatch extends Match {
     private void end(Player winner, Player loser) {
         Arrays.asList(winner, loser)
                 .forEach(it -> {
-                    it.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Winner: " + ChatColor.RESET + ChatColor.YELLOW + winner.getName());
+                    it.sendMessage(ChatColor.GOLD + "Winner: " + ChatColor.YELLOW + winner.getName());
+                    it.sendMessage(ChatColor.AQUA + "Inventories: " + ChatColor.GREEN + winner.getName() + ", " + ChatColor.RED + loser.getName());
+                    it.sendMessage();
                 });
 
         Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {

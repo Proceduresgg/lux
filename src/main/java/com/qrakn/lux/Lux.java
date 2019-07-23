@@ -8,6 +8,8 @@ import com.qrakn.lux.lobby.LobbyListeners;
 import com.qrakn.lux.match.MatchListeners;
 import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
+import com.qrakn.lux.match.handler.EnderpearlHandler;
+import com.qrakn.lux.match.handler.ItemHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.listener.MatchQueueListeners;
@@ -34,6 +36,8 @@ public class Lux extends JavaPlugin {
         new Aether(this, new LuxBoardAdapter());
 
         ArenaHandler.INSTANCE.init();
+        EnderpearlHandler.INSTANCE.init();
+        ItemHandler.INSTANCE.init();
 
         registerListeners();
         registerCommands(new PaperCommandManager(this));
@@ -49,13 +53,11 @@ public class Lux extends JavaPlugin {
 
     private void registerListeners() {
         Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
-                new MatchQueueListeners())
-                .forEach(this::registerListener);
+                new MatchQueueListeners()).forEach(this::registerListener);
     }
 
     private void registerCommands(PaperCommandManager manager) {
-        Arrays.asList(new LadderCommand(), new ArenaCommand())
-                .forEach(manager::registerCommand);
+        Arrays.asList(new LadderCommand(), new ArenaCommand()).forEach(manager::registerCommand);
     }
 
     private void registerListener(Listener listener) {

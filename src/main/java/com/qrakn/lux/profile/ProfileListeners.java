@@ -1,5 +1,7 @@
 package com.qrakn.lux.profile;
 
+import com.qrakn.lux.match.handler.MatchHandler;
+import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -13,12 +15,28 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ProfileListeners implements Listener {
 
     @EventHandler
     public void onAsyncPrePlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
         ProfileHandler.INSTANCE.create(event.getUniqueId(), event.getName());
+    }
+
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Profile profile = ProfileHandler.INSTANCE.getProfiles().remove(player.getUniqueId());
+
+        switch (profile.getState()) {
+            case MATCH:
+                MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
+                return;
+
+            case QUEUE:
+                MatchQueueHandler.INSTANCE.exit(player);
+        }
     }
 
     @EventHandler
