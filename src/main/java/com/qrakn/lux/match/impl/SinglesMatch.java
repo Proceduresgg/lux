@@ -4,6 +4,7 @@ import com.qrakn.lux.Lux;
 import com.qrakn.lux.lobby.Lobby;
 import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.arena.Arena;
+import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.match.ladder.Ladder;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
@@ -45,6 +46,9 @@ public class SinglesMatch extends Match {
 
         getLadder().getDefaultKit().apply(player);
         getLadder().getDefaultKit().apply(opponent);
+
+        player.showPlayer(opponent);
+        opponent.showPlayer(player);
     }
 
     public void handleDeath(Player player) {
@@ -54,6 +58,9 @@ public class SinglesMatch extends Match {
 
         opposite.hidePlayer(player);
         opposite.getInventory().clear();
+
+        opposite.setHealth(20);
+        opposite.getInventory().setArmorContents(null);
 
         end(opposite, player);
     }
@@ -72,6 +79,8 @@ public class SinglesMatch extends Match {
         }, 50L);
 
         getArena().setAvailable(true);
+
+        MatchHandler.INSTANCE.getMatches().remove(this);
     }
 
     private Player getOpposite(Player player) {

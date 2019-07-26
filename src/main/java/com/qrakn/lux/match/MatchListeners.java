@@ -1,11 +1,14 @@
 package com.qrakn.lux.match;
 
+import com.qrakn.lux.Lux;
+import com.qrakn.lux.lobby.Lobby;
 import com.qrakn.lux.match.handler.EnderpearlHandler;
 import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.util.PlayerUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,11 +27,12 @@ public class MatchListeners implements Listener {
 
         Player player = event.getEntity();
 
+        Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {
+            player.spigot().respawn();
+            Lobby.spawn(player);
+        }, 6L);
+
         MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
-
-        player.setHealth(20);
-
-        PlayerUtils.reset(player);
     }
 
     @EventHandler
@@ -36,11 +40,11 @@ public class MatchListeners implements Listener {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.getProfile(player);
 
-        if (profile.getState() != ProfileState.MATCH) return;
+        if (profile.getState() != ProfileState.MATCH || event.getItem() == null) return;
 
         switch (event.getItem().getType()) {
             case ENDER_PEARL:
-                event.setCancelled(EnderpearlHandler.INSTANCE.canPearl(player));
+                event.setCancelled(!EnderpearlHandler.INSTANCE.canPearl(player));
                 break;
 
             default: break;
@@ -77,7 +81,8 @@ public class MatchListeners implements Listener {
                 break;
 
             default:
-
+                Bukkit.getScheduler().runTaskLater(Lux.getInstance(), drop::remove, 100L);
+                break;
         }
     }
 }

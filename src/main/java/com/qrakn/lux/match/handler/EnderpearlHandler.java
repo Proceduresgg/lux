@@ -27,8 +27,7 @@ public enum EnderpearlHandler {
     }
 
     public boolean canPearl(Player player) {
-        return !(recentlyPearled.containsKey(player.getUniqueId())
-                && getEndTime(player.getUniqueId()) >= System.currentTimeMillis());
+        return !(recentlyPearled.containsKey(player.getUniqueId()));
     }
 
     public long getEndTime(UUID uuid) {

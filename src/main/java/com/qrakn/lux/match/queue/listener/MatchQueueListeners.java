@@ -1,8 +1,6 @@
 package com.qrakn.lux.match.queue.listener;
 
-import com.qrakn.lux.match.queue.MatchQueue;
 import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
-import com.qrakn.lux.match.queue.menu.CasualQueueMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +13,8 @@ public class MatchQueueListeners implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getItem() == null) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getItem() == null)
+            return;
 
         switch (event.getItem().getType()) {
             case INK_SACK:
