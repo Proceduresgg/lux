@@ -15,7 +15,7 @@ import java.util.List;
 public class CasualQueueMenu extends PlayerMenu {
 
     public CasualQueueMenu(Player player) {
-        super(player, 27, LuxConfig.ITEMS.getString("QUEUE.CASUAL.TITLE"));
+        super(player, 9, LuxConfig.ITEMS.getString("QUEUE.CASUAL.TITLE"));
     }
 
     @Override

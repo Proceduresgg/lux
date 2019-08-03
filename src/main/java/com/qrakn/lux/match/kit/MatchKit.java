@@ -1,9 +1,11 @@
 package com.qrakn.lux.match.kit;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 @RequiredArgsConstructor
 public class MatchKit {
 

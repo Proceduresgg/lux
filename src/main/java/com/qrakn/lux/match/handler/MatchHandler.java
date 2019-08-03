@@ -21,6 +21,7 @@ public enum MatchHandler {
         return matches
                 .stream()
                 .filter(it -> it.getOpponent() == player || it.getPlayer() == player)
-                .findFirst().get();
+                .findFirst()
+                .orElse(null);
     }
 }

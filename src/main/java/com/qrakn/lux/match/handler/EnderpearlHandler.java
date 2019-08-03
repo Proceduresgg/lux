@@ -19,7 +19,7 @@ public enum EnderpearlHandler {
     private final int cooldown = 16;
 
     public void init() {
-        Bukkit.getScheduler().runTaskTimer(Lux.getInstance(), () -> recentlyPearled.keySet().forEach(uuid -> {
+        Bukkit.getScheduler().runTaskTimer(Lux.getInstance(), () -> new HashMap<>(recentlyPearled).keySet().forEach(uuid -> {
             if (getEndTime(uuid) < System.currentTimeMillis()) {
                 recentlyPearled.remove(uuid);
             }

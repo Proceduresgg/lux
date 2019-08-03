@@ -23,4 +23,21 @@ public class LadderCommand extends BaseCommand {
 
         ladder.setDefaultKit(new MatchKit(player.getInventory().getContents(), player.getInventory().getArmorContents()));
     }
+
+    @Subcommand("getinventory")
+    public void onGetInventory(Player player, String name) {
+        Ladder ladder = LadderHandler.INSTANCE.getLadders().get(name);
+
+        ladder.getDefaultKit().apply(player);
+    }
+
+    @Subcommand("delete")
+    public void onDelete(Player player, String name) {
+        LadderHandler.INSTANCE.getLadders().get(name).delete();
+    }
+
+    @Subcommand("seticon")
+    public void onSetIcon(Player player, String name) {
+        LadderHandler.INSTANCE.getLadders().get(name).setIcon(player.getItemInHand());
+    }
 }

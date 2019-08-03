@@ -17,7 +17,6 @@ import org.bukkit.WorldCreator;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Getter
 public enum ArenaHandler {
@@ -133,12 +132,11 @@ public enum ArenaHandler {
     }
 
     public Arena getRandomArena() {
-        List<Arena> available = grid.values()
+        return grid.values()
                 .stream()
                 .filter(arena -> !arena.isModelArena())
                 .filter(Arena::isAvailable)
-                .collect(Collectors.toList());
-
-        return available.get(ThreadLocalRandom.current().nextInt(0, available.size()));
+                .findFirst()
+                .orElse(null);
     }
 }

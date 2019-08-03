@@ -9,12 +9,14 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @Getter
 public class MatchQueue {
 
-    private final List<MatchQueuePlayer> queue = new ArrayList<>();
+    private final Queue<MatchQueuePlayer> queue = new LinkedList<>();
 
     private final Ladder ladder;
 
@@ -25,9 +27,9 @@ public class MatchQueue {
     }
 
     private void start() {
-        Bukkit.getScheduler().runTaskTimer(Lux.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(Lux.getInstance(), () -> {
             while (queue.size() > 1) {
-                MatchQueuePlayer player = queue.get(0);
+                MatchQueuePlayer player = queue.element();
                 queue.stream()
                         .filter(it -> it != player)
                         .filter(it -> it.canFight(player))

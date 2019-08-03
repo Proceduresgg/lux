@@ -7,7 +7,6 @@ import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
-import com.qrakn.lux.util.PlayerUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,9 +21,6 @@ public class MatchListeners implements Listener {
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        event.setDeathMessage(null);
-        event.getDrops().clear();
-
         Player player = event.getEntity();
 
         Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {
@@ -33,6 +29,9 @@ public class MatchListeners implements Listener {
         }, 6L);
 
         MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
+
+        event.setDeathMessage(null);
+        event.getDrops().clear();
     }
 
     @EventHandler
@@ -47,7 +46,8 @@ public class MatchListeners implements Listener {
                 event.setCancelled(!EnderpearlHandler.INSTANCE.canPearl(player));
                 break;
 
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -63,7 +63,8 @@ public class MatchListeners implements Listener {
                 EnderpearlHandler.INSTANCE.getRecentlyPearled().put(player.getUniqueId(), System.currentTimeMillis());
                 break;
 
-            default: break;
+            default:
+                break;
         }
     }
 

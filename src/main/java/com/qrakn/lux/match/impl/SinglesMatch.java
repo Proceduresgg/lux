@@ -6,6 +6,8 @@ import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.match.ladder.Ladder;
+import com.qrakn.lux.match.queue.MatchState;
+import com.qrakn.lux.match.task.MatchStartTask;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -28,6 +30,8 @@ public class SinglesMatch extends Match {
         this.player = player;
         this.opponent = opponent;
 
+        arena.setAvailable(false);
+
         start();
     }
 
@@ -49,6 +53,10 @@ public class SinglesMatch extends Match {
 
         player.showPlayer(opponent);
         opponent.showPlayer(player);
+
+        new MatchStartTask(this);
+
+        setState(MatchState.FIGHTING);
     }
 
     public void handleDeath(Player player) {
@@ -66,6 +74,8 @@ public class SinglesMatch extends Match {
     }
 
     private void end(Player winner, Player loser) {
+        setState(MatchState.ENDING);
+
         Arrays.asList(winner, loser)
                 .forEach(it -> {
                     it.sendMessage(ChatColor.GOLD + "Winner: " + ChatColor.YELLOW + winner.getName());
@@ -75,15 +85,15 @@ public class SinglesMatch extends Match {
 
         Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {
             Lobby.spawn(winner);
-            Lobby.spawn(player);
         }, 50L);
+
 
         getArena().setAvailable(true);
 
         MatchHandler.INSTANCE.getMatches().remove(this);
     }
 
-    private Player getOpposite(Player player) {
+    public Player getOpposite(Player player) {
         return player == getPlayer() ? opponent : getPlayer();
     }
 }

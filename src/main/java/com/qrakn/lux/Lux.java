@@ -13,6 +13,7 @@ import com.qrakn.lux.match.handler.ItemHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.listener.MatchQueueListeners;
+import com.qrakn.lux.mongo.MongoHandler;
 import com.qrakn.lux.profile.ProfileListeners;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.world.WorldListeners;
@@ -35,9 +36,11 @@ public class Lux extends JavaPlugin {
         new PhoenixGui(this);
         new Aether(this, new LuxBoardAdapter());
 
+        MongoHandler.INSTANCE.init();
         ArenaHandler.INSTANCE.init();
         EnderpearlHandler.INSTANCE.init();
         ItemHandler.INSTANCE.init();
+        LadderHandler.INSTANCE.init();
 
         registerListeners();
         registerCommands(new PaperCommandManager(this));

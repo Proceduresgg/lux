@@ -3,12 +3,18 @@ package com.qrakn.lux.board;
 import com.bizarrealex.aether.scoreboard.Board;
 import com.bizarrealex.aether.scoreboard.BoardAdapter;
 import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
+import com.qrakn.lux.match.handler.MatchHandler;
+import com.qrakn.lux.match.impl.SinglesMatch;
+import com.qrakn.lux.match.queue.MatchState;
+import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
+import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -22,18 +28,46 @@ public class LuxBoardAdapter implements BoardAdapter {
 
     @Override
     public List<String> getScoreboard(Player player, Board board, Set<BoardCooldown> set) {
+        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+
         int playing = ProfileHandler.INSTANCE.getProfiles().values()
                 .stream()
                 .filter(it -> it.getState() == ProfileState.MATCH)
                 .collect(Collectors.toList()).size();
 
-        return Arrays.asList(
-                ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
-                ChatColor.WHITE + "Online: " + ChatColor.GOLD + Bukkit.getOnlinePlayers().size(),
-                ChatColor.WHITE + "Playing: " + ChatColor.GOLD + playing,
-                "",
-                ChatColor.WHITE + "Global ELO: " + ChatColor.YELLOW + "1000",
-                ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
-        );
+        switch (profile.getState()) {
+            case QUEUE:
+                return Arrays.asList(
+                        ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
+                        ChatColor.GRAY + "Searching for match...",
+                        " » " + ChatColor.AQUA + MatchQueueHandler.INSTANCE.getMatchQueuePlayers().get(player.getUniqueId()).getQueue().getLadder().getName(),
+                        " » " + ChatColor.GREEN + "Casual " + ChatColor.GRAY + "(00:00)",
+                        ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
+                );
+
+            case MATCH:
+                SinglesMatch match = MatchHandler.INSTANCE.getMatch(player);
+                if (match == null || match.getState() == MatchState.ENDING) {
+                    return new ArrayList<>();
+                } else {
+                    return Arrays.asList(
+                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
+                            ChatColor.WHITE + player.getName(),
+                            ChatColor.GOLD + "vs",
+                            ChatColor.WHITE + match.getOpposite(player).getName(),
+                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
+                    );
+                }
+
+            default:
+                return Arrays.asList(
+                        ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
+                        ChatColor.WHITE + "Online: " + ChatColor.GOLD + Bukkit.getOnlinePlayers().size(),
+                        ChatColor.WHITE + "Playing: " + ChatColor.GOLD + playing,
+                        "",
+                        ChatColor.WHITE + "Global ELO: " + ChatColor.YELLOW + "1000",
+                        ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
+                );
+        }
     }
 }
