@@ -15,6 +15,6 @@ public class ArenaLocationPair {
     public static ArenaLocationPair fromString(String string) {
         String[] split = string.split(":");
 
-        return new ArenaLocationPair(Integer.valueOf(split[0]), Integer.valueOf(split[2]));
+        return new ArenaLocationPair(Integer.valueOf(split[0]), Integer.valueOf(split[1]));
     }
 }

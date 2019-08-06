@@ -1,5 +1,7 @@
 package com.qrakn.lux.match.arena.handler;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.qrakn.lux.Lux;
 import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.match.arena.Arena;
@@ -7,8 +9,10 @@ import com.qrakn.lux.match.arena.data.ArenaBounds;
 import com.qrakn.lux.match.arena.data.ArenaLocationPair;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematic;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematicHandler;
+import com.qrakn.lux.mongo.MongoHandler;
 import com.qrakn.lux.util.FileUtils;
 import lombok.Getter;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -57,13 +61,16 @@ public enum ArenaHandler {
                     });
         }
 
-        for (String pair : LuxConfig.ARENAS.getFileConfiguration().getStringList("ARENAS")) {
-            ArenaLocationPair locationPair = ArenaLocationPair.fromString(pair);
-            ArenaSchematic schematic = ArenaSchematicHandler.INSTANCE.getSchematics().get(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".SCHEMATIC"));
-            List<Location> spawns = (List<Location>) LuxConfig.ARENAS.getFileConfiguration().get("ARENAS." + pair + "SPAWNS");
-            ArenaBounds bounds = ArenaBounds.fromString(LuxConfig.ARENAS.getString("ARENAS." + locationPair.toString() + ".BOUNDS"));
+        MongoCollection<Document> collection = MongoHandler.INSTANCE.getDatabase().getCollection("arenas");
 
-            grid.put(locationPair, new Arena(schematic, locationPair, spawns, bounds));
+        try (MongoCursor<Document> cursor = collection.find().iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+
+//                collection.deleteOne(document);
+
+                this.grid.put(ArenaLocationPair.fromString(document.getString("locationPair")), new Arena(document));
+            }
         }
 
         ArenaSchematicHandler.INSTANCE.getSchematics().values().forEach(ArenaSchematic::getModelArena);

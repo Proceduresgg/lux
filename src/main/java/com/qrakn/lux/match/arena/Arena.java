@@ -1,12 +1,18 @@
 package com.qrakn.lux.match.arena;
 
-import com.qrakn.lux.config.LuxConfig;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import com.qrakn.lux.Lux;
+import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.data.ArenaBounds;
 import com.qrakn.lux.match.arena.data.ArenaLocationPair;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematic;
+import com.qrakn.lux.match.arena.schematic.ArenaSchematicHandler;
 import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicBlock;
 import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicLocation;
+import com.qrakn.lux.match.arena.schematic.data.LuxLocation;
+import com.qrakn.lux.mongo.MongoHandler;
 import com.qrakn.lux.util.AngleUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +20,8 @@ import lombok.Setter;
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.TileEntity;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.World;
+import org.bson.Document;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
@@ -38,19 +42,47 @@ public class Arena {
 
     private final ArenaLocationPair locationPair;
 
-    private List<Location> spawns = new ArrayList<>();
+    private List<LuxLocation> spawns = new ArrayList<>();
 
     private boolean available = true;
 
     private ArenaBounds bounds;
 
-    public Arena(ArenaSchematic schematic, ArenaLocationPair locationPair, List<Location> spawns, ArenaBounds bounds) {
+    public Arena(Document document) {
+        this.schematic = ArenaSchematicHandler.INSTANCE.getSchematics().get(document.getString("schematic"));
+        this.locationPair = ArenaLocationPair.fromString(document.getString("locationPair"));
+        this.bounds = ArenaBounds.fromString(document.getString("bounds"));
+
+        if (!isModelArena()) {
+            spawns.add(new LuxLocation(document.getString("spawn1")));
+            spawns.add(new LuxLocation(document.getString("spawn2")));
+        }
+    }
+
+    public Arena(ArenaSchematic schematic, ArenaLocationPair locationPair, List<LuxLocation> spawns, ArenaBounds bounds) {
         this.schematic = schematic;
         this.locationPair = locationPair;
         this.spawns = spawns;
         this.bounds = bounds;
 
         save();
+    }
+
+    public Document toJSON() {
+        Document document = new Document("locationPair", locationPair.toString()).append("bounds", bounds.toString())
+                .append("schematic", schematic.getName());
+
+        if (!isModelArena()) {
+            document.append("spawn1", spawns.get(0).toString())
+                    .append("spawn2", spawns.get(1).toString());
+        }
+        return document;
+
+    }
+
+    public void save() {
+        MongoHandler.INSTANCE.getDatabase().getCollection("arenas")
+                .replaceOne(Filters.eq("locationPair", this.locationPair.toString()), toJSON(), new ReplaceOptions().upsert(true));
     }
 
     public void load(Runnable callback) {
@@ -68,16 +100,6 @@ public class Arena {
                 });
             }
         }
-    }
-
-    public void save() {
-        String loc = locationPair.toString();
-
-        LuxConfig.ARENAS.getFileConfiguration().set("ARENAS." + loc + ".SPAWNS", spawns);
-        LuxConfig.ARENAS.set("ARENAS." + loc + ".SCHEMATIC", schematic.getName());
-        LuxConfig.ARENAS.set("ARENAS." + loc + ".BOUNDS", bounds.toString());
-
-        LuxConfig.ARENAS.getConfig().save();
     }
 
     public void copyTo(Arena arena) {
@@ -168,7 +190,7 @@ public class Arena {
 
                             spawnPoint.setYaw(AngleUtils.faceToYaw(skull.getRotation()) + 90.0F);
 
-                            spawns.add(spawnPoint);
+                            spawns.add(new LuxLocation(spawnPoint));
                             block.setType(Material.AIR);
                         }
                     }
@@ -186,21 +208,25 @@ public class Arena {
     }
 
     public Arena pasteArena(ArenaLocationPair pair) {
-        int x = pair.getX() * 500;
-        int z = pair.getZ() * 500;
+        ArenaCommand.getExecutor().execute(() -> {
+            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> {
+                int x = pair.getX() * 500;
+                int z = pair.getZ() * 500;
 
-        if (z == 0) {
-            schematic.paste(this, ArenaHandler.INSTANCE.getWorld(), x, 90, z);
-        } else {
-            Arena model = schematic.getModelArena();
-            ArenaBounds modelBounds = model.getBounds();
+                if (z == 0) {
+                    schematic.paste(this, ArenaHandler.INSTANCE.getWorld(), x, 90, z);
+                } else {
+                    Arena model = schematic.getModelArena();
+                    ArenaBounds modelBounds = model.getBounds();
 
-            this.bounds = new ArenaBounds(x, x + (modelBounds.getMaxX() - modelBounds.getMinX()), z,
-                    z + (modelBounds.getMaxZ() - modelBounds.getMinZ()), modelBounds.getMinY(),
-                    90 + (modelBounds.getMaxY() - modelBounds.getMinY())); // height = 90
+                    this.bounds = new ArenaBounds(x, x + (modelBounds.getMaxX() - modelBounds.getMinX()), z,
+                            z + (modelBounds.getMaxZ() - modelBounds.getMinZ()), modelBounds.getMinY(),
+                            90 + (modelBounds.getMaxY() - modelBounds.getMinY())); // height = 90
 
-            model.copyTo(this);
-        }
+                    model.copyTo(this);
+                }
+            });
+        });
 
         return this;
     }

@@ -20,10 +20,14 @@ import com.qrakn.lux.world.WorldListeners;
 import com.qrakn.phoenix.gui.PhoenixGui;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.Listener;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Lux extends JavaPlugin {
 
@@ -66,4 +70,21 @@ public class Lux extends JavaPlugin {
     private void registerListener(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
+
+//    @Override
+//    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+//        return new LuxChunkGenerator();
+//    }
+//
+//    public class LuxChunkGenerator extends ChunkGenerator {
+//        @Override
+//        public byte[] generate(World world, Random random, int x, int z) {
+//            return new byte[32768];
+//        }
+//
+//        @Override
+//        public Location getFixedSpawnLocation(World world, Random random) {
+//            return world.getSpawnLocation();
+//        }
+//    }
 }

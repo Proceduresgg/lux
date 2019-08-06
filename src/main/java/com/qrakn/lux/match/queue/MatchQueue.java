@@ -38,9 +38,11 @@ public class MatchQueue {
                             queue.remove(player);
                             queue.remove(opponent);
 
-                            MatchHandler.INSTANCE.getMatches()
-                                    .add(new SinglesMatch(player.getPlayer(), opponent.getPlayer(), false, ladder,
-                                            ArenaHandler.INSTANCE.getRandomArena()));
+                            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> {
+                                MatchHandler.INSTANCE.getMatches()
+                                        .add(new SinglesMatch(player.getPlayer(), opponent.getPlayer(), false, ladder,
+                                                ArenaHandler.INSTANCE.getRandomArena()));
+                            });
                         });
             }
         }, 0L, 10L);

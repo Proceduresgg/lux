@@ -8,6 +8,7 @@ import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematic;
 import com.qrakn.lux.match.arena.schematic.ArenaSchematicHandler;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,17 +19,13 @@ import java.util.concurrent.Executors;
 @CommandAlias("arena")
 public class ArenaCommand extends BaseCommand {
 
-    private Executor executor = Executors.newSingleThreadExecutor();
+    @Getter private static Executor executor = Executors.newSingleThreadExecutor();
 
     @Subcommand("paste")
     public void onPaste(Player player, String arena) {
         ArenaSchematic schematic = ArenaSchematicHandler.INSTANCE.getSchematics().get(arena);
 
-        executor.execute(() -> {
-            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> {
-                ArenaHandler.INSTANCE.createArena(schematic);
-            });
-        });
+        ArenaHandler.INSTANCE.createArena(schematic);
     }
 
     @Subcommand("model")
@@ -55,7 +52,7 @@ public class ArenaCommand extends BaseCommand {
                 .filter(it -> it.getSchematic() == ArenaSchematicHandler.INSTANCE.getSchematics().get(arena))
                 .findFirst();
 
-        optional.ifPresent(arena1 -> player.teleport(arena1.getSpawns().get(0)));
+        optional.ifPresent(arena1 -> player.teleport(arena1.getSpawns().get(0).toBukkitLocation()));
     }
 
     @Subcommand("spawn2")
@@ -66,6 +63,6 @@ public class ArenaCommand extends BaseCommand {
                 .filter(it -> it.getSchematic() == ArenaSchematicHandler.INSTANCE.getSchematics().get(arena))
                 .findFirst();
 
-        optional.ifPresent(arena1 -> player.teleport(arena1.getSpawns().get(1)));
+        optional.ifPresent(arena1 -> player.teleport(arena1.getSpawns().get(1).toBukkitLocation()));
     }
 }

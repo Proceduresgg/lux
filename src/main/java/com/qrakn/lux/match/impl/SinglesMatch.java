@@ -36,8 +36,8 @@ public class SinglesMatch extends Match {
     }
 
     private void start() {
-        player.teleport(getArena().getSpawns().get(0));
-        opponent.teleport(getArena().getSpawns().get(1));
+        player.teleport(getArena().getSpawns().get(0).toBukkitLocation());
+        opponent.teleport(getArena().getSpawns().get(1).toBukkitLocation());
 
         player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Opponent: " + ChatColor.YELLOW + opponent.getName());
         opponent.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Opponent: " + ChatColor.YELLOW + player.getName());
