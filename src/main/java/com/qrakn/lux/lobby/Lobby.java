@@ -26,6 +26,11 @@ public class Lobby {
         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 
         applySpawnContents(player);
+
+        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+            onlinePlayer.showPlayer(player);
+            player.showPlayer(onlinePlayer);
+        });
     }
 
     public static void applySpawnContents(Player player) {

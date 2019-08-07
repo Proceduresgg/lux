@@ -25,10 +25,10 @@ public class LobbyListeners implements Listener {
 
         Lobby.spawn(player);
 
-        LuxConfig.MESSAGES.getFileConfiguration().getStringList("JOIN-MESSAGES")
-                .stream()
-                .map(MessageUtils::color)
-                .forEach(player::sendMessage);
+//        LuxConfig.MESSAGES.getFileConfiguration().getStringList("JOIN-MESSAGES")
+//                .stream()
+//                .map(MessageUtils::color)
+//                .forEach(player::sendMessage);
 
         event.setJoinMessage(null);
     }

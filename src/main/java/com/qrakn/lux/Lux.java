@@ -13,6 +13,8 @@ import com.qrakn.lux.match.handler.ItemHandler;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.listener.MatchQueueListeners;
+import com.qrakn.lux.match.spectator.SpectateCommand;
+import com.qrakn.lux.match.spectator.SpectatorListener;
 import com.qrakn.lux.mongo.MongoHandler;
 import com.qrakn.lux.profile.ProfileListeners;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -60,31 +62,31 @@ public class Lux extends JavaPlugin {
 
     private void registerListeners() {
         Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
-                new MatchQueueListeners()).forEach(this::registerListener);
+                new MatchQueueListeners(), new SpectatorListener()).forEach(this::registerListener);
     }
 
     private void registerCommands(PaperCommandManager manager) {
-        Arrays.asList(new LadderCommand(), new ArenaCommand()).forEach(manager::registerCommand);
+        Arrays.asList(new LadderCommand(), new ArenaCommand(), new SpectateCommand()).forEach(manager::registerCommand);
     }
 
     private void registerListener(Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
 
-//    @Override
-//    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-//        return new LuxChunkGenerator();
-//    }
-//
-//    public class LuxChunkGenerator extends ChunkGenerator {
-//        @Override
-//        public byte[] generate(World world, Random random, int x, int z) {
-//            return new byte[32768];
-//        }
-//
-//        @Override
-//        public Location getFixedSpawnLocation(World world, Random random) {
-//            return world.getSpawnLocation();
-//        }
-//    }
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+        return new LuxChunkGenerator();
+    }
+
+    public class LuxChunkGenerator extends ChunkGenerator {
+        @Override
+        public byte[] generate(World world, Random random, int x, int z) {
+            return new byte[32768];
+        }
+
+        @Override
+        public Location getFixedSpawnLocation(World world, Random random) {
+            return world.getSpawnLocation();
+        }
+    }
 }

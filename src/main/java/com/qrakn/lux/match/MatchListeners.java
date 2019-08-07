@@ -4,6 +4,8 @@ import com.qrakn.lux.Lux;
 import com.qrakn.lux.lobby.Lobby;
 import com.qrakn.lux.match.handler.EnderpearlHandler;
 import com.qrakn.lux.match.handler.MatchHandler;
+import com.qrakn.lux.match.impl.SinglesMatch;
+import com.qrakn.lux.match.queue.MatchState;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -84,6 +87,22 @@ public class MatchListeners implements Listener {
             default:
                 Bukkit.getScheduler().runTaskLater(Lux.getInstance(), drop::remove, 100L);
                 break;
+        }
+    }
+
+    @EventHandler
+    public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
+        Player player = (Player) event.getEntity();
+        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+
+        if (profile.getState() != ProfileState.MATCH) return;
+
+        SinglesMatch match = MatchHandler.INSTANCE.getMatch(player);
+
+        if (match.getState() != MatchState.FIGHTING) {
+            event.setCancelled(true);
+        } else {
+            event.setCancelled(Math.random() < 0.5);
         }
     }
 }

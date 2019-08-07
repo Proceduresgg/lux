@@ -7,16 +7,20 @@ import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.match.ladder.Ladder;
 import com.qrakn.lux.match.queue.MatchState;
+import com.qrakn.lux.match.spectator.Spectator;
+import com.qrakn.lux.match.spectator.SpectatorHandler;
 import com.qrakn.lux.match.task.MatchStartTask;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
+import com.qrakn.lux.util.PlayerUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Getter
@@ -65,10 +69,8 @@ public class SinglesMatch extends Match {
         opposite.playSound(player.getLocation(), Sound.AMBIENCE_THUNDER, 10F, 10F);
 
         opposite.hidePlayer(player);
-        opposite.getInventory().clear();
 
-        opposite.setHealth(20);
-        opposite.getInventory().setArmorContents(null);
+        PlayerUtils.reset(opposite);
 
         end(opposite, player);
     }
@@ -87,6 +89,10 @@ public class SinglesMatch extends Match {
             Lobby.spawn(winner);
         }, 50L);
 
+        new ArrayList<>(SpectatorHandler.INSTANCE.getSpectators().values())
+                .stream()
+                .filter(spectator -> spectator.getMatch() == this)
+                .forEach(spectator -> SpectatorHandler.INSTANCE.stopSpectating(Bukkit.getPlayer(spectator.getUuid())));
 
         getArena().setAvailable(true);
 
