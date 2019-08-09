@@ -5,6 +5,7 @@ import org.bukkit.block.BlockFace;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class AngleUtils {
 
@@ -17,9 +18,7 @@ public class AngleUtils {
                 BlockFace.SOUTH, BlockFace.SOUTH_WEST
         };
 
-        for (int x = 0; x < radials.length; x++) {
-            notches.put(radials[x], x);
-        }
+        IntStream.range(0, radials.length).forEach(i -> notches.put(radials[i], i));
     }
 
     public static int faceToYaw(BlockFace face) {

@@ -20,17 +20,14 @@ public enum MongoHandler {
                 .connectionsPerHost(50)
                 .build();
 
-        MongoCredential credential = MongoCredential.createCredential(
-                "procedures",
-                "lux",
-                "lawde".toCharArray());
+        MongoCredential credential = MongoCredential
+                .createCredential(
+                        "procedures",
+                        "lux",
+                        "lawde".toCharArray()
+                );
 
-        MongoClient client = new MongoClient(new ServerAddress(
-                "localhost",
-                27017),
-                credential,
-                options);
-
-        this.database = client.getDatabase("lux");
+        this.database = new MongoClient(new ServerAddress("localhost", 27017), credential, options)
+                .getDatabase("lux");
     }
 }

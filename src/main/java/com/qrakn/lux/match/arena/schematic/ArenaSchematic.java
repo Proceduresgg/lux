@@ -7,6 +7,7 @@ import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicBlock;
 import com.qrakn.lux.match.arena.schematic.data.ArenaSchematicLocation;
 import com.qrakn.lux.util.FileUtils;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -36,23 +37,20 @@ public class ArenaSchematic {
 
     private boolean loaded = false;
 
+    @SneakyThrows
     public ArenaSchematic(File schematic) {
         this.name = FileUtils.getFileName(schematic);
 
-        try {
-            NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(schematic));
+        NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(schematic));
 
-            this.width = compound.getInt("Width");
-            this.height = compound.getInt("Height");
-            this.length = compound.getInt("Length");
-            this.data = compound.getByteArray("Data");
-            this.blocksArray = compound.getByteArray("Blocks");
-            this.tiles = compound.getList("TileEntities", 10);
+        this.width = compound.getInt("Width");
+        this.height = compound.getInt("Height");
+        this.length = compound.getInt("Length");
+        this.data = compound.getByteArray("Data");
+        this.blocksArray = compound.getByteArray("Blocks");
+        this.tiles = compound.getList("TileEntities", 10);
 
-            load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        load();
     }
 
     private void load() {

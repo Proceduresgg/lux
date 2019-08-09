@@ -1,17 +1,13 @@
 package com.qrakn.lux.match.queue.handler;
 
-import com.qrakn.lux.Lux;
+import com.qrakn.lux.lobby.handler.LobbyHandler;
 import com.qrakn.lux.match.ladder.Ladder;
-import com.qrakn.lux.match.ladder.handler.LadderHandler;
-import com.qrakn.lux.match.queue.MatchQueue;
 import com.qrakn.lux.match.queue.MatchQueuePlayer;
-import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
+import com.qrakn.lux.util.PlayerUtils;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,9 +22,9 @@ public enum MatchQueueHandler {
 
     INSTANCE;
 
-    private final Map<UUID, MatchQueuePlayer> matchQueuePlayers = new HashMap<>();
+    private final Map<UUID, MatchQueuePlayer> players = new HashMap<>();
 
-    private ItemStack[] contents = {
+    private final ItemStack[] contents = {
             new MenuItemBuilder(Material.INK_SACK)
                     .durability(1)
                     .name(ChatColor.RED + "Exit Queue")
@@ -37,19 +33,22 @@ public enum MatchQueueHandler {
     };
 
     public void queue(Player player, Ladder ladder, boolean ranked) {
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        ProfileHandler.INSTANCE.get(player).setState(ProfileState.QUEUE);
 
-        profile.setState(ProfileState.QUEUE);
+        PlayerUtils.reset(player);
 
-        player.getInventory().clear();
         player.getInventory().setContents(contents);
         player.updateInventory();
 
-        matchQueuePlayers.put(player.getUniqueId(), new MatchQueuePlayer(player, ladder.getQueue(), ranked));
+        players.put(player.getUniqueId(), new MatchQueuePlayer(player, ladder.getQueue(), ranked));
     }
 
-    public void exit(Player player) {
-        matchQueuePlayers.get(player.getUniqueId()).exit();
+    public void remove(Player player) {
+        ProfileHandler.INSTANCE.get(player).setState(ProfileState.LOBBY);
+
+        LobbyHandler.INSTANCE.applySpawnContents(player); // so the player doesn't get teleported
+
+        players.remove(player.getUniqueId());
 
         player.sendMessage(ChatColor.GRAY + "Exited the queue.");
     }

@@ -138,12 +138,11 @@ public enum ArenaHandler {
         return arena;
     }
 
-    public Arena getRandomArena() {
+    public Optional<Arena> getRandomArena() {
         return grid.values()
                 .stream()
                 .filter(arena -> !arena.isModelArena())
                 .filter(Arena::isAvailable)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }

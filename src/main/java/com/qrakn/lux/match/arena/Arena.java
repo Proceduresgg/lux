@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -59,15 +60,6 @@ public class Arena {
         }
     }
 
-    public Arena(ArenaSchematic schematic, ArenaLocationPair locationPair, List<LuxLocation> spawns, ArenaBounds bounds) {
-        this.schematic = schematic;
-        this.locationPair = locationPair;
-        this.spawns = spawns;
-        this.bounds = bounds;
-
-        save();
-    }
-
     public Document toJSON() {
         Document document = new Document("locationPair", locationPair.toString()).append("bounds", bounds.toString())
                 .append("schematic", schematic.getName());
@@ -86,20 +78,18 @@ public class Arena {
     }
 
     public void load(Runnable callback) {
-        int minX = bounds.getMinX();
         int maxX = bounds.getMaxX();
-        int minZ = bounds.getMinZ();
         int maxZ = bounds.getMaxZ();
+        int minX = bounds.getMinX();
+        int minZ = bounds.getMinZ();
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                ArenaHandler.INSTANCE.getWorld().getChunkAtAsync(x, z, chunk -> {
-                    if (chunk.getX() == maxX && chunk.getZ() == maxZ) {
-                        callback.run();
-                    }
-                });
-            }
-        }
+        IntStream.rangeClosed(minX, maxX)
+                .forEach(x -> IntStream.rangeClosed(minZ, maxZ)
+                        .forEach(z -> ArenaHandler.INSTANCE.getWorld().getChunkAtAsync(x, z, chunk -> {
+                            if (chunk.getX() == maxX && chunk.getZ() == maxZ) {
+                                callback.run();
+                            }
+                        })));
     }
 
     public void copyTo(Arena arena) {

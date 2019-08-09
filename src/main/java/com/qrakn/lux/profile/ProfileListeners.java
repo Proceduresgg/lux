@@ -21,7 +21,7 @@ public class ProfileListeners implements Listener {
 
     @EventHandler
     public void onAsyncPrePlayerLoginEvent(AsyncPlayerPreLoginEvent event) {
-        ProfileHandler.INSTANCE.create(event.getUniqueId(), event.getName());
+        ProfileHandler.INSTANCE.put(new Profile(event.getUniqueId(), event.getName()));
     }
 
     @EventHandler
@@ -31,11 +31,11 @@ public class ProfileListeners implements Listener {
 
         switch (profile.getState()) {
             case MATCH:
-                MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
+                MatchHandler.INSTANCE.get(player).ifPresent(match -> match.handleDeath(player));
                 return;
 
             case QUEUE:
-                MatchQueueHandler.INSTANCE.exit(player);
+                MatchQueueHandler.INSTANCE.remove(player);
         }
     }
 
@@ -44,7 +44,7 @@ public class ProfileListeners implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (!profile.getState().isLoseHunger()) {
             event.setCancelled(true);
@@ -56,7 +56,7 @@ public class ProfileListeners implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (!profile.getState().isTakeDamage()) {
             event.setCancelled(true);
@@ -68,7 +68,7 @@ public class ProfileListeners implements Listener {
         if (!(event.getDamager() instanceof Player)) return;
 
         Player player = (Player) event.getDamager();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (!profile.getState().isDealDamage()) {
             event.setCancelled(true);
@@ -78,7 +78,7 @@ public class ProfileListeners implements Listener {
     @EventHandler
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (!profile.getState().isDropItem()) {
             event.setCancelled(true);
@@ -88,7 +88,7 @@ public class ProfileListeners implements Listener {
     @EventHandler
     public void onPlayerPickupItemEvent(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (!profile.getState().isPickupItem()) {
             event.setCancelled(true);
@@ -98,7 +98,7 @@ public class ProfileListeners implements Listener {
     @EventHandler
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (player.getGameMode() == GameMode.CREATIVE) return;
 
@@ -110,7 +110,7 @@ public class ProfileListeners implements Listener {
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
         if (player.getGameMode() == GameMode.CREATIVE) return;
 

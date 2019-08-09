@@ -7,7 +7,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
 
-public class ItemStackSerializerUtil {
+public class ItemStackUtils {
 
     /**
      *
@@ -15,13 +15,11 @@ public class ItemStackSerializerUtil {
      *
      * <p />
      *
-     * Based off of {@link #toBase64(Inventory)}.
-     *
      * @param items to turn into a Base64 String.
      * @return Base64 string of the items.
      * @throws IllegalStateException
      */
-    public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
+    public static String toBase64(ItemStack[] items) throws IllegalStateException {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
@@ -48,13 +46,11 @@ public class ItemStackSerializerUtil {
      *
      * <p />
      *
-     * Base off of {@link #fromBase64(String)}.
-     *
      * @param data Base64 string to convert to ItemStack array.
      * @return ItemStack array created from the Base64 string.
      * @throws IOException
      */
-    public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
+    public static ItemStack[] fromBase64(String data) throws IOException {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);

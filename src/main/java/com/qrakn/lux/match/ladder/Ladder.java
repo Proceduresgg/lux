@@ -7,16 +7,14 @@ import com.qrakn.lux.match.kit.MatchKit;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.MatchQueue;
 import com.qrakn.lux.mongo.MongoHandler;
-import com.qrakn.lux.util.ItemStackSerializerUtil;
+import com.qrakn.lux.util.ItemStackUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bson.Document;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.IOException;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -33,6 +31,36 @@ public class Ladder {
 
     private MatchKit defaultKit = new MatchKit(new ItemStack[]{}, new ItemStack[]{});
 
+    @SneakyThrows
+    public Ladder fromJSON(Document document) {
+        if (document != null) {
+            this.priority = document.getInteger("priority");
+            this.icon = ItemStackUtils.fromBase64(document.getString("icon"))[0];
+            this.defaultKit = new MatchKit(ItemStackUtils.fromBase64(document.getString("contents")), ItemStackUtils.fromBase64(document.getString("armor")));
+        }
+
+        return this;
+    }
+
+    private Document toJSON() {
+        return new Document("name", name)
+                .append("priority", priority)
+                .append("contents", ItemStackUtils.toBase64(defaultKit.getContents()))
+                .append("armor", ItemStackUtils.toBase64(defaultKit.getArmor()))
+                .append("icon", ItemStackUtils.toBase64(new ItemStack[]{icon}));
+    }
+
+    public int getPlaying() {
+        return (int) MatchHandler.INSTANCE.getMatches()
+                .stream()
+                .filter(match -> match.getLadder() == this)
+                .count() * 2;
+    }
+
+    public int getQueuing() {
+        return queue.getQueue().size();
+    }
+
     public void save() {
         MongoHandler.INSTANCE.getDatabase().getCollection("ladders")
                 .replaceOne(Filters.eq("name", this.name), toJSON(), new ReplaceOptions().upsert(true));
@@ -43,45 +71,5 @@ public class Ladder {
 
         MongoHandler.INSTANCE.getDatabase().getCollection("ladders")
                 .deleteOne(Filters.eq("name", this.name));
-    }
-
-    public Ladder fromJSON(Document document) {
-        if (document != null) {
-            this.priority = document.getInteger("priority");
-
-            try {
-                this.defaultKit = new MatchKit(ItemStackSerializerUtil.itemStackArrayFromBase64(document.getString("contents")),
-                        ItemStackSerializerUtil.itemStackArrayFromBase64(document.getString("armor")));
-
-                if (document.getString("icon") != null) {
-                    this.icon =  ItemStackSerializerUtil.itemStackArrayFromBase64(document.getString("icon"))[0];
-                }
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-        }
-
-        return this;
-    }
-
-    private Document toJSON() {
-        return new Document("name", name)
-                .append("priority", priority)
-                .append("contents", ItemStackSerializerUtil.itemStackArrayToBase64(defaultKit.getContents()))
-                .append("armor", ItemStackSerializerUtil.itemStackArrayToBase64(defaultKit.getArmor()))
-                .append("icon", ItemStackSerializerUtil.itemStackArrayToBase64(new ItemStack[]{icon}));
-    }
-
-    public int getPlaying() {
-        return MatchHandler.INSTANCE.getMatches()
-                .stream()
-                .filter(match -> match.getLadder() == this)
-                .collect(Collectors.toList())
-                .size();
-    }
-
-    public int getQueuing() {
-        return queue.getQueue().size();
     }
 }

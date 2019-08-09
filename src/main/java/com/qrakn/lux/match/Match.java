@@ -2,7 +2,6 @@ package com.qrakn.lux.match;
 
 import com.qrakn.lux.match.arena.Arena;
 import com.qrakn.lux.match.ladder.Ladder;
-import com.qrakn.lux.match.queue.MatchState;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

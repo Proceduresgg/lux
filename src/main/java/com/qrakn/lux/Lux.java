@@ -8,13 +8,12 @@ import com.qrakn.lux.lobby.LobbyListeners;
 import com.qrakn.lux.match.MatchListeners;
 import com.qrakn.lux.match.arena.command.ArenaCommand;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
-import com.qrakn.lux.match.handler.EnderpearlHandler;
-import com.qrakn.lux.match.handler.ItemHandler;
+import com.qrakn.lux.match.inventory.command.InventoryCommand;
 import com.qrakn.lux.match.ladder.LadderCommand;
 import com.qrakn.lux.match.ladder.handler.LadderHandler;
 import com.qrakn.lux.match.queue.listener.MatchQueueListeners;
-import com.qrakn.lux.match.spectator.SpectateCommand;
-import com.qrakn.lux.match.spectator.SpectatorListener;
+import com.qrakn.lux.match.spectator.SpectatorListeners;
+import com.qrakn.lux.match.spectator.command.SpectateCommand;
 import com.qrakn.lux.mongo.MongoHandler;
 import com.qrakn.lux.profile.ProfileListeners;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -44,8 +43,6 @@ public class Lux extends JavaPlugin {
 
         MongoHandler.INSTANCE.init();
         ArenaHandler.INSTANCE.init();
-        EnderpearlHandler.INSTANCE.init();
-        ItemHandler.INSTANCE.init();
         LadderHandler.INSTANCE.init();
 
         registerListeners();
@@ -62,11 +59,11 @@ public class Lux extends JavaPlugin {
 
     private void registerListeners() {
         Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
-                new MatchQueueListeners(), new SpectatorListener()).forEach(this::registerListener);
+                new MatchQueueListeners(), new SpectatorListeners()).forEach(this::registerListener);
     }
 
     private void registerCommands(PaperCommandManager manager) {
-        Arrays.asList(new LadderCommand(), new ArenaCommand(), new SpectateCommand()).forEach(manager::registerCommand);
+        Arrays.asList(new LadderCommand(), new ArenaCommand(), new SpectateCommand(), new InventoryCommand()).forEach(manager::registerCommand);
     }
 
     private void registerListener(Listener listener) {

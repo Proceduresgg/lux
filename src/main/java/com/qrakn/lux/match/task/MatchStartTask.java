@@ -7,17 +7,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class MatchStartTask extends BukkitRunnable {
 
-    private static final Map<Integer, ChatColor> COUNT_COLORS = new HashMap<>();
+    private static final Map<Integer, ChatColor> CHAT_COLORS = new HashMap<>();
 
     static {
-        COUNT_COLORS.put(5, ChatColor.DARK_RED);
-        COUNT_COLORS.put(4, ChatColor.RED);
-        COUNT_COLORS.put(3, ChatColor.GOLD);
-        COUNT_COLORS.put(2, ChatColor.YELLOW);
-        COUNT_COLORS.put(1, ChatColor.GREEN);
+        ChatColor[] colors = {
+                ChatColor.GREEN, ChatColor.YELLOW,
+                ChatColor.GOLD, ChatColor.RED, ChatColor.DARK_RED
+        };
+
+        IntStream.rangeClosed(0, colors.length).forEach(i -> CHAT_COLORS.put(i, colors[i]));
     }
 
     private final SinglesMatch match;
@@ -40,8 +42,8 @@ public class MatchStartTask extends BukkitRunnable {
                 break;
 
             default:
-                match.getPlayer().sendMessage( COUNT_COLORS.get(count).toString() + ChatColor.BOLD + count + "...");
-                match.getOpponent().sendMessage(COUNT_COLORS.get(count).toString() + ChatColor.BOLD + count + "...");
+                match.getPlayer().sendMessage(CHAT_COLORS.get(count).toString() + ChatColor.BOLD + count + "...");
+                match.getOpponent().sendMessage(CHAT_COLORS.get(count).toString() + ChatColor.BOLD + count + "...");
                 break;
         }
 

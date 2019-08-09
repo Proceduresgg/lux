@@ -1,4 +1,4 @@
-package com.qrakn.lux.lobby;
+package com.qrakn.lux.lobby.handler;
 
 import com.qrakn.lux.config.LuxConfig;
 import com.qrakn.lux.profile.ProfileState;
@@ -10,9 +10,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Lobby {
+public enum LobbyHandler {
 
-    private static ItemStack[] contents = {
+    INSTANCE;
+
+    private final ItemStack[] contents = {
             new MenuItemBuilder(Material.IRON_SWORD)
                     .name(LuxConfig.ITEMS.getString("LOBBY.CASUAL_ITEM.NAME"))
                     .lore(LuxConfig.ITEMS.getString("LOBBY.CASUAL_ITEM.LORE"))
@@ -20,8 +22,8 @@ public class Lobby {
                     .getItemStack()
     };
 
-    public static void spawn(Player player) {
-        ProfileHandler.INSTANCE.getProfile(player).setState(ProfileState.LOBBY);
+    public void spawn(Player player) {
+        ProfileHandler.INSTANCE.get(player).setState(ProfileState.LOBBY);
 
         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 
@@ -33,11 +35,10 @@ public class Lobby {
         });
     }
 
-    public static void applySpawnContents(Player player) {
+    public void applySpawnContents(Player player) {
         PlayerUtils.reset(player);
 
         player.getInventory().setContents(contents);
-
         player.updateInventory();
     }
 }

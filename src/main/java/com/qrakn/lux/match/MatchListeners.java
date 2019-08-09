@@ -1,11 +1,10 @@
 package com.qrakn.lux.match;
 
 import com.qrakn.lux.Lux;
-import com.qrakn.lux.lobby.Lobby;
-import com.qrakn.lux.match.handler.EnderpearlHandler;
+import com.qrakn.lux.lobby.handler.LobbyHandler;
+import com.qrakn.lux.match.cooldown.PearlCooldown;
+import com.qrakn.lux.match.handler.DroppedItemsHandler;
 import com.qrakn.lux.match.handler.MatchHandler;
-import com.qrakn.lux.match.impl.SinglesMatch;
-import com.qrakn.lux.match.queue.MatchState;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -19,6 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class MatchListeners implements Listener {
 
@@ -28,10 +28,11 @@ public class MatchListeners implements Listener {
 
         Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> {
             player.spigot().respawn();
-            Lobby.spawn(player);
+
+            LobbyHandler.INSTANCE.spawn(player);
         }, 6L);
 
-        MatchHandler.INSTANCE.getMatch(player).handleDeath(player);
+        MatchHandler.INSTANCE.get(player).ifPresent(match -> match.handleDeath(player));
 
         event.setDeathMessage(null);
         event.getDrops().clear();
@@ -40,69 +41,68 @@ public class MatchListeners implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
+        ItemStack item = event.getItem();
 
-        if (profile.getState() != ProfileState.MATCH || event.getItem() == null) return;
+        if (profile.getState() == ProfileState.MATCH && item != null) {
+            switch (item.getType()) {
+                case ENDER_PEARL:
+                    MatchHandler.INSTANCE.get(player).ifPresent(match -> {
+                        if (match.getState() != MatchState.FIGHTING || PearlCooldown.INSTANCE.contains(player)) {
+                            event.setCancelled(true);
+                        }
+                    });
+                    break;
 
-        switch (event.getItem().getType()) {
-            case ENDER_PEARL:
-                event.setCancelled(!EnderpearlHandler.INSTANCE.canPearl(player));
-                break;
-
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
 
     @EventHandler
     public void onProjectileLaunchEvent(ProjectileLaunchEvent event) {
         Player player = (Player) event.getEntity().getShooter();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
-        if (profile.getState() != ProfileState.MATCH) return;
+        if (profile.getState() == ProfileState.MATCH) {
+            switch (event.getEntity().getType()) {
+                case ENDER_PEARL:
+                    PearlCooldown.INSTANCE.put(player);
+                    break;
 
-        switch (event.getEntity().getType()) {
-            case ENDER_PEARL:
-                EnderpearlHandler.INSTANCE.getRecentlyPearled().put(player.getUniqueId(), System.currentTimeMillis());
-                break;
-
-            default:
-                break;
+                default:
+                    break;
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
-        Item drop = event.getItemDrop();
+        Profile profile = ProfileHandler.INSTANCE.get(player);
+        Item item = event.getItemDrop();
 
-        if (profile.getState() != ProfileState.MATCH) return;
+        if (profile.getState() == ProfileState.MATCH) {
+            switch (item.getItemStack().getType()) {
+                case GLASS_BOTTLE:
+                    item.remove();
+                    break;
 
-        switch (drop.getItemStack().getType()) {
-            case GLASS_BOTTLE:
-                drop.remove();
-                break;
-
-            default:
-                Bukkit.getScheduler().runTaskLater(Lux.getInstance(), drop::remove, 100L);
-                break;
+                default:
+                    DroppedItemsHandler.INSTANCE.put(item);
+                    break;
+            }
         }
     }
 
     @EventHandler
     public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
         Player player = (Player) event.getEntity();
-        Profile profile = ProfileHandler.INSTANCE.getProfile(player);
+        Profile profile = ProfileHandler.INSTANCE.get(player);
 
-        if (profile.getState() != ProfileState.MATCH) return;
-
-        SinglesMatch match = MatchHandler.INSTANCE.getMatch(player);
-
-        if (match.getState() != MatchState.FIGHTING) {
-            event.setCancelled(true);
-        } else {
-            event.setCancelled(Math.random() < 0.5);
+        if (profile.getState() == ProfileState.MATCH) {
+            MatchHandler.INSTANCE.get(player).ifPresent(match -> event.setCancelled(match.getState() != MatchState.FIGHTING));
         }
     }
 }
