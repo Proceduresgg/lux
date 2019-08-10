@@ -26,10 +26,6 @@ public class SpectateCommand extends BaseCommand {
         } else if (playerProfile.getState() != ProfileState.LOBBY) {
             player.sendMessage(ChatColor.RED + "YOU GOTTA BE AT SPAWN !!");
         } else {
-            if (MatchHandler.INSTANCE.get(target.getPlayer()).getState() == MatchState.ENDING) {
-                player.sendMessage("Match ending nigga lol");
-                return;
-            }
 
             SpectatorHandler.INSTANCE.spectate(player, targetPlayer);
         }

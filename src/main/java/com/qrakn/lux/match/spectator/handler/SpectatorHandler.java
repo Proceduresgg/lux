@@ -1,6 +1,7 @@
 package com.qrakn.lux.match.spectator.handler;
 
 import com.qrakn.lux.lobby.handler.LobbyHandler;
+import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.handler.MatchHandler;
 import com.qrakn.lux.match.spectator.Spectator;
 import com.qrakn.lux.profile.ProfileState;
@@ -8,6 +9,7 @@ import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.util.PlayerUtils;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,13 +18,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public enum SpectatorHandler {
 
     INSTANCE;
 
-    private final Map<UUID, Spectator> spectators = new HashMap<>();
+    private final Map<UUID, Spectator> spectators = new ConcurrentHashMap<>();
 
     private final ItemStack[] contents = {
             new MenuItemBuilder(Material.INK_SACK)
@@ -42,8 +45,7 @@ public enum SpectatorHandler {
 
             spectator.getInventory().setContents(contents);
 
-            match.getOpponent().hidePlayer(spectator);
-            match.getPlayer().hidePlayer(spectator);
+            match.getPlayers().forEach(player -> player.hidePlayer(spectator));
 
             spectator.teleport(target);
             spectator.setAllowFlight(true);
@@ -57,5 +59,12 @@ public enum SpectatorHandler {
         spectators.remove(player.getUniqueId());
 
         LobbyHandler.INSTANCE.spawn(player);
+    }
+
+    public void handleMatch(Match match) {
+        spectators.values()
+                .stream()
+                .filter(spectator -> spectator.getMatch() == match)
+                .forEach(spectator -> remove(Bukkit.getPlayer(spectator.getUuid())));
     }
 }

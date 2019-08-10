@@ -1,6 +1,6 @@
 package com.qrakn.lux.match.spectator;
 
-import com.qrakn.lux.match.impl.SinglesMatch;
+import com.qrakn.lux.match.Match;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,5 +12,5 @@ public class Spectator {
 
     private final UUID uuid;
 
-    private final SinglesMatch match;
+    private final Match match;
 }

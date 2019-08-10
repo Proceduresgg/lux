@@ -1,9 +1,11 @@
 package com.qrakn.lux.match.queue;
 
 import com.qrakn.lux.Lux;
+import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.arena.handler.ArenaHandler;
-import com.qrakn.lux.match.impl.SinglesMatch;
 import com.qrakn.lux.match.ladder.Ladder;
+import com.qrakn.lux.match.participant.MatchParticipantGroup;
+import com.qrakn.lux.match.scenario.impl.CasualMatchScenario;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
@@ -34,14 +36,17 @@ public class MatchQueue {
                         .ifPresent(opponent -> {
                             removeQueuePlayer(player, opponent);
 
-                            ArenaHandler.INSTANCE.getRandomArena()
-                                    .ifPresent(arena -> arena.load(() -> new SinglesMatch(
-                                            player.getPlayer(),
-                                            opponent.getPlayer(),
-                                            false,
-                                            ladder,
-                                            arena)
-                                    ));
+                            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> {
+                                ArenaHandler.INSTANCE.getRandomArena()
+                                        .ifPresent(arena -> new Match(
+                                                        new MatchParticipantGroup(player.getPlayer()),
+                                                        new MatchParticipantGroup(opponent.getPlayer()),
+                                                        ladder,
+                                                        arena.load(),
+                                                        new CasualMatchScenario()
+                                                )
+                                        );
+                            });
                         });
             }
         }, 0L, 30L);

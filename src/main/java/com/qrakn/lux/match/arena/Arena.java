@@ -77,7 +77,7 @@ public class Arena {
                 .replaceOne(Filters.eq("locationPair", this.locationPair.toString()), toJSON(), new ReplaceOptions().upsert(true));
     }
 
-    public void load(Runnable callback) {
+    public Arena load() { // loading all chunks
         int maxX = bounds.getMaxX();
         int maxZ = bounds.getMaxZ();
         int minX = bounds.getMinX();
@@ -85,11 +85,11 @@ public class Arena {
 
         IntStream.rangeClosed(minX, maxX)
                 .forEach(x -> IntStream.rangeClosed(minZ, maxZ)
-                        .forEach(z -> ArenaHandler.INSTANCE.getWorld().getChunkAtAsync(x, z, chunk -> {
-                            if (chunk.getX() == maxX && chunk.getZ() == maxZ) {
-                                callback.run();
-                            }
-                        })));
+                        .forEach(z -> ArenaHandler.INSTANCE.getWorld().getChunkAtAsync(x, z, chunk -> { })));
+
+        available = false;
+
+        return this;
     }
 
     public void copyTo(Arena arena) {

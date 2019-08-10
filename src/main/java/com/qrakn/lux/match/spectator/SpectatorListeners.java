@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class SpectatorListeners implements Listener {
 
@@ -17,11 +18,11 @@ public class SpectatorListeners implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Profile profile = ProfileHandler.INSTANCE.get(player);
-        Item item = (Item) event.getItem();
+        ItemStack item = event.getItem();
 
         if (profile.getState() == ProfileState.SPECTATING) {
             if (item != null  && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-                switch (event.getItem().getType()) {
+                switch (item.getType()) {
                     case INK_SACK:
                         SpectatorHandler.INSTANCE.remove(player);
                         break;

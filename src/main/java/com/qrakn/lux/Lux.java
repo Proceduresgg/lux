@@ -45,7 +45,9 @@ public class Lux extends JavaPlugin {
         ArenaHandler.INSTANCE.init();
         LadderHandler.INSTANCE.init();
 
-        registerListeners();
+        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
+                new MatchQueueListeners(), new SpectatorListeners()).forEach(this::registerListener);
+
         registerCommands(new PaperCommandManager(this));
     }
 
@@ -55,11 +57,6 @@ public class Lux extends JavaPlugin {
         ProfileHandler.INSTANCE.save();
         LadderHandler.INSTANCE.save();
         ArenaHandler.INSTANCE.save();
-    }
-
-    private void registerListeners() {
-        Arrays.asList(new LobbyListeners(), new ProfileListeners(), new WorldListeners(), new MatchListeners(),
-                new MatchQueueListeners(), new SpectatorListeners()).forEach(this::registerListener);
     }
 
     private void registerCommands(PaperCommandManager manager) {

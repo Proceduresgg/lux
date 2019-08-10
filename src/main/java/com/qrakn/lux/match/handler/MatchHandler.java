@@ -1,8 +1,6 @@
 package com.qrakn.lux.match.handler;
 
-import com.qrakn.lux.match.arena.Arena;
-import com.qrakn.lux.match.impl.SinglesMatch;
-import com.qrakn.lux.match.ladder.Ladder;
+import com.qrakn.lux.match.Match;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -17,9 +15,20 @@ public enum MatchHandler {
 
     INSTANCE;
 
-    private final List<SinglesMatch> matches = new ArrayList<>();
+    private final List<Match> matches = new ArrayList<>();
 
-    public Optional<SinglesMatch> get(Player player) {
-        return matches.stream().filter(it -> it.getOpponent() == player || it.getPlayer() == player).findFirst();
+    public Optional<Match> get(Player player) {
+        return matches
+                .stream()
+                .filter(match -> match.getOpponents().contains(player) || match.getTeam().contains(player))
+                .findFirst();
+    }
+
+    public void add(Match match) {
+        matches.add(match);
+    }
+
+    public void remove(Match match) {
+        matches.remove(match);
     }
 }

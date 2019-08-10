@@ -4,7 +4,7 @@ import com.bizarrealex.aether.scoreboard.Board;
 import com.bizarrealex.aether.scoreboard.BoardAdapter;
 import com.bizarrealex.aether.scoreboard.cooldown.BoardCooldown;
 import com.qrakn.lux.match.handler.MatchHandler;
-import com.qrakn.lux.match.impl.SinglesMatch;
+import com.qrakn.lux.match.Match;
 import com.qrakn.lux.match.MatchState;
 import com.qrakn.lux.match.queue.handler.MatchQueueHandler;
 import com.qrakn.lux.profile.Profile;
@@ -14,10 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LuxBoardAdapter implements BoardAdapter {
@@ -45,19 +42,18 @@ public class LuxBoardAdapter implements BoardAdapter {
                         ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
                 );
 
-            case MATCH:
-                SinglesMatch match = MatchHandler.INSTANCE.get(player);
-                if (match == null || match.getState() == MatchState.ENDING) {
-                    return new ArrayList<>();
-                } else {
-                    return Arrays.asList(
-                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
-                            ChatColor.WHITE + player.getName(),
-                            ChatColor.GOLD + "vs",
-                            ChatColor.WHITE + match.getOpposite(player).getName(),
-                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
-                    );
-                }
+//            case MATCH:
+//                Optional<Match> optional = MatchHandler.INSTANCE.get(player);
+//
+//                if (optional.isPresent() && optional.get().getState() != MatchState.ENDING) {
+//                    return Arrays.asList(
+//                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------",
+//                            ChatColor.WHITE + player.getName(),
+//                            ChatColor.GOLD + "vs",
+//                            ChatColor.WHITE + optional.get().g(player).getName(),
+//                            ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "--------------------"
+//                    );
+//                } else return new ArrayList<>();
 
             default:
                 return Arrays.asList(
