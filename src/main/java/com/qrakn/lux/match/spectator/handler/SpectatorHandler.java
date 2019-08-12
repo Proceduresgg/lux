@@ -50,7 +50,7 @@ public enum SpectatorHandler {
             spectator.teleport(target);
             spectator.setAllowFlight(true);
             spectator.setFlying(true);
-            spectator.sendMessage(ChatColor.RED + "ha u specing now gg");
+            spectator.sendMessage(ChatColor.GREEN + "You're now spectating " + target.getName());
         });
 
     }

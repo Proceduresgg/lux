@@ -22,9 +22,9 @@ public class SpectateCommand extends BaseCommand {
         Profile targetPlayerProfile = ProfileHandler.INSTANCE.get(targetPlayer);
 
         if (targetPlayerProfile.getState() != ProfileState.MATCH) {
-            player.sendMessage(ChatColor.RED + "THEY GOTTA BE AT SPAWN !!");
+            player.sendMessage(ChatColor.RED + "Target isn't in spawn");
         } else if (playerProfile.getState() != ProfileState.LOBBY) {
-            player.sendMessage(ChatColor.RED + "YOU GOTTA BE AT SPAWN !!");
+            player.sendMessage(ChatColor.RED + "You have to be in spawn to spectate someone.");
         } else {
 
             SpectatorHandler.INSTANCE.spectate(player, targetPlayer);
