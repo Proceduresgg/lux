@@ -1,14 +1,11 @@
 package com.qrakn.lux.match.cooldown;
 
-import com.qrakn.lux.Lux;
 import lombok.Getter;
 import net.jodah.expiringmap.ExpiringMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 

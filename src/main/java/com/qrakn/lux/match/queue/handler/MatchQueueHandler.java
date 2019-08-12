@@ -48,7 +48,7 @@ public enum MatchQueueHandler {
 
         LobbyHandler.INSTANCE.applySpawnContents(player); // so the player doesn't get teleported
 
-        players.remove(player.getUniqueId());
+        players.get(player.getUniqueId()).getQueue().getQueue().remove(players.remove(player.getUniqueId()));
 
         player.sendMessage(ChatColor.GRAY + "Exited the queue.");
     }
