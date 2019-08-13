@@ -19,7 +19,8 @@ import java.util.concurrent.Executors;
 @CommandAlias("arena")
 public class ArenaCommand extends BaseCommand {
 
-    @Getter private static Executor executor = Executors.newSingleThreadExecutor();
+    @Getter
+    private static Executor executor = Executors.newSingleThreadExecutor();
 
     @Subcommand("paste")
     public void onPaste(Player player, String arena) {

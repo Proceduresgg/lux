@@ -23,7 +23,10 @@ public class CasualMatchScenario implements MatchScenario {
         match.getTeam().getPlayers().forEach(player -> teamNames.append(player.getName()).append(", "));
         match.getOpponents().getPlayers().forEach(player -> opponentNames.append(player.getName()).append(", "));
 
-        match.getPlayers().forEach(player -> player.sendMessage(ChatColor.BOLD.toString() + ChatColor.GOLD + "Opponents: " + (match.getTeam().contains(player) ? opponentNames.toString() : teamNames.toString())));
+        match.getPlayers().forEach(player -> player.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + "Opponents: "
+                + ChatColor.YELLOW + (match.getTeam().contains(player)
+                ? opponentNames.toString().substring(0, opponentNames.length() - 2) :
+                teamNames.toString().substring(0, teamNames.length() - 2))));
     }
 
     @Override

@@ -78,14 +78,24 @@ public class Match {
     private void end(MatchParticipantGroup winner, MatchParticipantGroup loser) {
         state = MatchState.ENDING;
 
+        // storing inventories
+        winner.getParticipants()
+                .stream()
+                .filter(participant -> !participant.isDead())
+                .map(MatchParticipant::getPlayer)
+                .forEach(player -> {
+                    InventoryHandler.INSTANCE.put(player);
+                    PlayerUtils.reset(player);
+                });
+
         Arrays.stream(scenarios).forEach(scenario -> scenario.onEnd(this, winner, loser));
 
+        // 5 seconds until teleported to spawn
         Bukkit.getScheduler().runTaskLater(Lux.getInstance(), () -> winner.getPlayers().forEach(LobbyHandler.INSTANCE::spawn), 50L);
-
-        SpectatorHandler.INSTANCE.handleMatch(this);
 
         arena.setAvailable(true);
 
+        SpectatorHandler.INSTANCE.handleMatch(this);
         MatchHandler.INSTANCE.remove(this);
     }
 

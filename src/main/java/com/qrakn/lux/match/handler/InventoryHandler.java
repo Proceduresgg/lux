@@ -14,7 +14,7 @@ public enum InventoryHandler {
     INSTANCE;
 
     private final ExpiringMap<UUID, MatchInventoryMenu> inventories = ExpiringMap.builder()
-            .expiration(60, TimeUnit.SECONDS)
+            .expiration(180, TimeUnit.SECONDS)
             .build();
 
     public void put(Player player) {

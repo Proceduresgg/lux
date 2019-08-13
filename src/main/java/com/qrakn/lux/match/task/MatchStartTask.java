@@ -35,7 +35,10 @@ public class MatchStartTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (match.getState() == MatchState.ENDING) cancel();
+        if (match.getState() == MatchState.ENDING) {
+            cancel();
+            return;
+        }
 
         switch (count) {
             case 0:
@@ -43,7 +46,7 @@ public class MatchStartTask extends BukkitRunnable {
                 match.getPlayers().forEach(player -> player.sendMessage(ChatColor.GREEN + "Start!"));
 
                 cancel();
-                break;
+                return;
 
             default:
                 match.getPlayers().forEach(player -> player.sendMessage(CHAT_COLORS.get(count).toString() + ChatColor.BOLD + count + "..."));
