@@ -2,6 +2,7 @@ package com.qrakn.lux.lobby;
 
 import com.qrakn.lux.lobby.handler.LobbyHandler;
 import com.qrakn.lux.match.queue.menu.CasualQueueMenu;
+import com.qrakn.lux.match.queue.menu.ComptetitiveQueueMenu;
 import com.qrakn.lux.profile.Profile;
 import com.qrakn.lux.profile.ProfileState;
 import com.qrakn.lux.profile.handler.ProfileHandler;
@@ -39,7 +40,8 @@ public class LobbyListeners implements Listener {
                         player.openInventory(new CasualQueueMenu(player).getInventory());
                         break;
 
-                    case DIAMOND_AXE:
+                    case DIAMOND_SWORD:
+                        player.openInventory(new ComptetitiveQueueMenu(player).getInventory());
                         break;
 
                     default:

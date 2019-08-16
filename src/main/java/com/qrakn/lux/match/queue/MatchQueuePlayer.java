@@ -21,6 +21,6 @@ public class MatchQueuePlayer {
     }
 
     public boolean canFight(MatchQueuePlayer opponent) {
-        return true;
+        return ranked == opponent.isRanked();
     }
 }

@@ -6,6 +6,7 @@ import com.qrakn.lux.profile.handler.ProfileHandler;
 import com.qrakn.lux.util.PlayerUtils;
 import com.qrakn.phoenix.gui.menu.item.MenuItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,12 @@ public enum LobbyHandler {
             new MenuItemBuilder(Material.IRON_SWORD)
                     .name(LuxConfig.ITEMS.getString("LOBBY.CASUAL_ITEM.NAME"))
                     .lore(LuxConfig.ITEMS.getString("LOBBY.CASUAL_ITEM.LORE"))
+                    .build()
+                    .getItemStack(),
+
+            new MenuItemBuilder(Material.DIAMOND_SWORD)
+                    .name(ChatColor.RED + "Competitive Queue")
+                    .lore(ChatColor.GRAY + "Select to queue for competitive.")
                     .build()
                     .getItemStack()
     };

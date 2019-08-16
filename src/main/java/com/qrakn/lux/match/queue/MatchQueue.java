@@ -6,6 +6,7 @@ import com.qrakn.lux.match.arena.handler.ArenaHandler;
 import com.qrakn.lux.match.ladder.Ladder;
 import com.qrakn.lux.match.participant.MatchParticipantGroup;
 import com.qrakn.lux.match.scenario.impl.CasualMatchScenario;
+import com.qrakn.lux.match.scenario.impl.CompetitiveMatchScenario;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
@@ -36,17 +37,15 @@ public class MatchQueue {
                         .ifPresent(opponent -> {
                             removeQueuePlayer(player, opponent);
 
-                            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> {
-                                ArenaHandler.INSTANCE.getRandomArena()
-                                        .ifPresent(arena -> new Match(
-                                                        new MatchParticipantGroup(player.getPlayer()),
-                                                        new MatchParticipantGroup(opponent.getPlayer()),
-                                                        ladder,
-                                                        arena.load(),
-                                                        new CasualMatchScenario()
-                                                )
-                                        );
-                            });
+                            Bukkit.getScheduler().runTask(Lux.getInstance(), () -> ArenaHandler.INSTANCE.getRandomArena()
+                                    .ifPresent(arena -> new Match(
+                                                    new MatchParticipantGroup(player.getPlayer()),
+                                                    new MatchParticipantGroup(opponent.getPlayer()),
+                                                    ladder,
+                                                    arena.load(),
+                                                    player.isRanked() ? new CompetitiveMatchScenario() : new CasualMatchScenario()
+                                            )
+                                    ));
                         });
             }
         }, 0L, 30L);
